@@ -1,0 +1,51 @@
+<!-- NB! This file is used inside build.xml and should not be called directly -->
+
+<project>
+
+  <!-- Import macros from the App Engine SDK -->
+
+  <import file="${sdk.dir}/config/user/ant-macros.xml" />
+
+  <!-- Perform JDO enhancement on compiled data classes -->
+
+  <target name="enhance-war">
+    <enhance_war war="war" />
+  </target>
+
+
+  <!-- Run the embedded server and start the application in it -->
+
+  <target name="runserver">
+    <dev_appserver war="war">
+      <options>
+        <arg value="--disable_update_check" />
+      </options>
+    </dev_appserver>
+  </target>
+
+
+  <!-- App Engine upload tasks-->
+
+  <target name="update">
+    <appcfg action="update" war="war" />
+  </target>
+
+  <target name="rollback">
+    <appcfg action="rollback" war="war" />
+  </target>
+
+
+  <!-- Request logs from App Engine -->
+
+  <target name="request-logs">
+    <appcfg action="request_logs" war="war">
+      <options>
+        <arg value="--num_days=5" />
+      </options>
+      <args>
+        <arg value="appengine-logs.txt" />
+      </args>
+    </appcfg>
+  </target>
+
+</project>
