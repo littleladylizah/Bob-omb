@@ -4,12 +4,22 @@
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/javascript" src="/js/util.js"></script>
+    <script type="text/javascript" src="/js/sidebar.js"></script>
     <script type="text/javascript" src="/js/draw.js"></script>
     <title>Bob-omb Battleships</title>
   </head>
   <body>
-    <h1>Success!</h1>
-    <p>Now make me do something...</p>
-    <canvas id="canvas" width="900" height="600"></canvas>
+    <h1>Bob-omb</h1>
+    <div id="sidebar">
+      <div id="sidebar-toggle"></div>
+      <div id="sidebar-content">
+        <p>Our sidebar goes here...</p>
+      </div>
+    </div>
+    <div id="center">
+      <canvas id="canvas" width="900" height="600"></canvas>
+      <a id="leaderboard" href="#">Leaderboard</a>
+    </div>
   </body>
 </html>
