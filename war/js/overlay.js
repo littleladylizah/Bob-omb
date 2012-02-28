@@ -1,20 +1,13 @@
+// Script to display overlays
+
 $(function() {
+  $("a[rel]").overlay({
+    mask: '#f0f0d8',
+    effect: 'apple',
 
-	// if the function argument is given to overlay,
-	// it is assumed to be the onBeforeLoad event listener
-	$("a[rel]").overlay({
-
-		mask: '#f0f0d8',
-		effect: 'apple',
-
-		onBeforeLoad: function() {
-
-			// grab wrapper element inside content
-			var wrap = this.getOverlay().find(".contentWrap");
-
-			// load the page specified in the trigger
-			wrap.load(this.getTrigger().attr("href"));
-		}
-
-	});
+    onBeforeLoad: function() {
+      var wrap = this.getOverlay().find(".contentWrap");
+      wrap.load(this.getTrigger().attr("href"));
+    }
+  });
 });
