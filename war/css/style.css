@@ -40,17 +40,27 @@ h1 {
 }
 
 #center {
-  width: 900px;
+  width: 860px;
   margin: 0em auto;
 }
 
-#canvas {
-  display: block;
-  background: url(/img/checker.png);
+#player-canvas {
+  float: left;
+  margin-top: 20px;
+  margin-right: 20px;
+  background: url(/img/board-a.png);
+}
+
+#enemy-canvas {
+  background: url(/img/board-b.png);
 }
 
 a {
   color: #609000;
   font-size: 3.6em;
   text-decoration: none;
+}
+
+div.clearfix {
+  clear: both;
 }
