@@ -1,11 +1,24 @@
-/* use a semi-transparent image for the overlay */
+/* Styling needed to contain loaded content in our overlay window */
+
 #overlay {
-  background-image:url(http://static.flowplayer.org/img/overlay/transparent.png);
-  height: 450px;
+  display: none;
+  height: 500px;
+  width: 640px;
+  padding: 35px;
+  background-image: url(../img/overlay.png);
 }
 
-/* container for external content. uses vertical scrollbar, if needed */
-div.contentWrap {
-  height: 441px;
+#overlay .close {
+  background-image: url(../img/close.png);
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+}
+
+#overlay #content-wrap {
+  height: 100%;
   overflow-y: auto;
 }
