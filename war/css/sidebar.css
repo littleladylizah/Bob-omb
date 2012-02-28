@@ -40,6 +40,14 @@
   overflow-y: auto;
 }
 
+#sidebar-content li {
+  font-size: 1.6em;
+}
+
+#sidebar-content li a {
+  font-size: 1em;
+}
+
 #sidebar-container a {
   margin: 0.4em;
 }
