@@ -17,6 +17,26 @@ a {
   text-decoration: none;
 }
 
+#center {
+  width: 860px;
+  margin: 0em auto;
+}
+
+#player-canvas {
+  float: left;
+  margin: 20px;
+  margin-left: 0px;
+  background: url(../img/board-a.png);
+}
+
+#enemy-canvas {
+  background: url(../img/board-b.png);
+}
+
+#lobby {
+  margin-left: 1em
+}
+
 #sidebar {
   height: 65em;
   position: fixed;
@@ -49,26 +69,6 @@ a {
 
 .sidebar-off {
   display: none;
-}
-
-#center {
-  width: 860px;
-  margin: 0em auto;
-}
-
-#player-canvas {
-  float: left;
-  margin: 20px;
-  margin-left: 0px;
-  background: url(../img/board-a.png);
-}
-
-#enemy-canvas {
-  background: url(../img/board-b.png);
-}
-
-#lobby {
-  margin-left: 1em
 }
 
 div.clearfix {
