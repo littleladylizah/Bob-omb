@@ -12,23 +12,23 @@ h1 {
 }
 
 #sidebar {
-  height: 650px;
+  height: 65em;
   position: fixed;
   right: 0px;
   top: 50%;
-  margin-top: -325px;
+  margin-top: -32.5em;
 }
 
 #sidebar-toggle {
   float: left;
-  width: 20px;
+  width: 2em;
   height: 100%;
   background-color: #c0c078;
   border: 1px solid #609000;
 }
 
 #sidebar-content {
-  width: 280px;
+  width: 30em;
   height: 100%;
   background-color: #f0f0d8;
   border-top: 1px solid #609000;
