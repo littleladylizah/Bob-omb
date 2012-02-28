@@ -5,7 +5,9 @@ var toggleSidebar = function() {
   var sidebar = document.getElementById("sidebar-content");
   if (hasClass(sidebar, "sidebar-off")) {
     removeClass(sidebar, "sidebar-off");
+    addClass(sidebar, "sidebar-on");
   } else {
+    removeClass(sidebar, "sidebar-on");
     addClass(sidebar, "sidebar-off");
   }
 };
