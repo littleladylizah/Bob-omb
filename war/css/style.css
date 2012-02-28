@@ -17,6 +17,26 @@ a {
   text-decoration: none;
 }
 
+#center {
+  width: 860px;
+  margin: 0em auto;
+}
+
+#player-canvas {
+  float: left;
+  margin: 20px;
+  margin-left: 0px;
+  background: url(../img/board-a.png);
+}
+
+#enemy-canvas {
+  background: url(../img/board-b.png);
+}
+
+#lobby-link {
+  margin-left: 1em
+}
+
 #sidebar {
   height: 65em;
   position: fixed;
@@ -36,7 +56,7 @@ a {
   border-bottom-left-radius: 1.5em;
 }
 
-#sidebar-content {
+#sidebar-container {
   width: 30em;
   height: 64.8em;
   background-color: #f0f0d8;
@@ -51,30 +71,31 @@ a {
   display: none;
 }
 
-#center {
-  width: 860px;
-  margin: 0em auto;
+#sidebar-content {
+  height: 52.5em;
+  border: 1px solid #c0c078;
+  margin: 0em 2em;
+  padding: 1em;
+  overflow-y: auto;
 }
 
-#player-canvas {
+#sidebar-container a {
+  margin: 0.4em;
+}
+
+#sidebar-container a.left {
   float: left;
-  margin: 20px;
-  margin-left: 0px;
-  background: url(../img/board-a.png);
+  margin-left: 0.8em
 }
 
-#enemy-canvas {
-  background: url(../img/board-b.png);
-}
-
-#lobby {
-  margin-left: 1em
+#sidebar-container a.right {
+  float: right;
+  margin-right: 0.8em
 }
 
 div.clearfix {
   clear: both;
 }
-
 
 /* use a semi-transparent image for the overlay */
 #overlay {
@@ -85,6 +106,6 @@ div.clearfix {
 
 /* container for external content. uses vertical scrollbar, if needed */
 div.contentWrap {
-	height:441px;
-	overflow-y:auto;
+  height: 441px;
+  overflow-y: auto;
 }
