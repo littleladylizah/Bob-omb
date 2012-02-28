@@ -3,10 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script type="text/javascript" src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
     <script type="text/javascript" src="js/sidebar.js"></script>
     <script type="text/javascript" src="js/draw.js"></script>
+    <script type="text/javascript" src="js/overlay.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/standalone.css"/>
+    <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/overlay-apple.css"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <title>Bob-omb Battleships</title>
   </head>
   <body>
@@ -17,6 +21,8 @@
       <div class="clearfix"></div>
       <a id="lobby-link" href="#">Alusta uut mängu</a>
     </div>
+
+    <!-- the sidebar -->
     <div id="sidebar">
       <div id="sidebar-toggle"></div>
       <div id="sidebar-container" class="sidebar-on">
@@ -24,8 +30,14 @@
         <a id="games" class="right" href="#">Mängud</a>
         <div class="clearfix"></div>
         <div id="sidebar-content">Siin kuvame vastavalt valikule kas käikude või mängude ajalugu</div>
-        <a id="leaderboard" class="right" href="#">Edetabel</a>
+        <a id="leaderboard" class="right" href="external-content.htm" rel="#overlay">Edetabel</a>
       </div>
+    </div>
+
+    <!-- the overlayed element -->
+    <div id"overlay" class="apple_overlay">
+      <!-- the external content is loaded inside this tag -->
+      <div class="contentWrap"></div>
     </div>
   </body>
 </html>
