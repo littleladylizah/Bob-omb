@@ -2,7 +2,7 @@
 // Shamelessly stolen from http://code.google.com/edu/submissions/html-css-javascript/
 
 var toggleSidebar = function() {
-  var sidebar = document.getElementById("sidebar-content");
+  var sidebar = document.getElementById("sidebar-container");
   if (hasClass(sidebar, "sidebar-off")) {
     removeClass(sidebar, "sidebar-off");
     addClass(sidebar, "sidebar-on");
