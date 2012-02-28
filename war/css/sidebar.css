@@ -32,6 +32,24 @@
   display: none;
 }
 
+#sidebar-container a {
+  margin: 0.4em;
+}
+
+#sidebar-container a.left {
+  float: left;
+  margin-left: 0.8em
+}
+
+#sidebar-container a.right {
+  float: right;
+  margin-right: 0.8em
+}
+
+#sidebar-container a.faded {
+  color: #c0c078;
+}
+
 #sidebar-content {
   height: 52.5em;
   border: 1px solid #c0c078;
@@ -51,22 +69,4 @@
 
 #sidebar-content p img {
   margin: 0px;
-}
-
-#sidebar-container a {
-  margin: 0.4em;
-}
-
-#sidebar-container a.left {
-  float: left;
-  margin-left: 0.8em
-}
-
-#sidebar-container a.right {
-  float: right;
-  margin-right: 0.8em
-}
-
-#sidebar-container a.faded {
-  color: #c0c078;
 }
