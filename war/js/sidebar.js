@@ -37,6 +37,12 @@ var showHistory = function(moves) {
   }
 };
 
+var showBoats = function() {
+  $("#moves").addClass("faded");
+  $("#games").addClass("faded");
+  $("#sidebar-content").load("boats.html");
+}
+
 var showMoves = function() {
   showHistory(true);
 };
@@ -49,5 +55,5 @@ var showGames = function() {
 addEvent(window, "load", function() {
   addEvent(document.getElementById("moves"), "click", showMoves);
   addEvent(document.getElementById("games"), "click", showGames);
-  showMoves();
+  showBoats();
 });

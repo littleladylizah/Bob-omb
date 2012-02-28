@@ -40,12 +40,17 @@
   overflow-y: auto;
 }
 
-#sidebar-content li {
+#sidebar-content li,
+#sidebar-content p {
   font-size: 1.6em;
 }
 
 #sidebar-content li a {
   font-size: 1em;
+}
+
+#sidebar-content p img {
+  margin: 0px;
 }
 
 #sidebar-container a {
