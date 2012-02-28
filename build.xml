@@ -3,14 +3,14 @@
   <!-- Targets and properties for getting the App Engine SDK -->
 
   <property name="sdk.name"    value="appengine-java-sdk" />
-  <property name="sdk.version" value="1.6.2.1" />
+  <property name="sdk.version" value="1.6.3" />
   <property name="sdk.dir"     value="${sdk.name}-${sdk.version}" />
   <property name="sdk.archive" value="${sdk.dir}.zip" />
 
   <property name="sdk.url"
            value="http://googleappengine.googlecode.com/files/${sdk.archive}" />
   <property name="sdk.sha1"
-           value="3619061b49df75d71f0ab854da7ec930f007036c" />
+           value="fd89346a1760bec603b39c5d68996fdfb3cf3c3d" />
 
   <target name="check-sdk"
       description="Checks if the SDKs directory already exists">
