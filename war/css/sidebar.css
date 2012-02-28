@@ -32,14 +32,6 @@
   display: none;
 }
 
-#sidebar-content {
-  height: 52.5em;
-  border: 1px solid #c0c078;
-  margin: 0em 2em;
-  padding: 1em;
-  overflow-y: auto;
-}
-
 #sidebar-container a {
   margin: 0.4em;
 }
@@ -56,4 +48,38 @@
 
 #sidebar-container a.faded {
   color: #c0c078;
+}
+
+#sidebar-content {
+  height: 52.5em;
+  border: 1px solid #c0c078;
+  margin: 0em 2em;
+  padding: 1em;
+  overflow-y: auto;
+}
+
+#sidebar-content li,
+#sidebar-content p {
+  font-size: 1.6em;
+}
+
+#sidebar-content li a {
+  font-size: 1em;
+}
+
+#sidebar-content p img {
+  margin: 0px;
+}
+
+#sidebar-content #confirm-boats {
+  display: block;
+  margin: 0em auto;
+  text-align: center;
+  padding: 0.5em;
+  color: #c0c078;
+}
+
+#sidebar-content #confirm-boats:hover {
+  color: #609000;
+  outline: 1px solid #609000;
 }
