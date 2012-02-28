@@ -93,6 +93,10 @@ a {
   margin-right: 0.8em
 }
 
+#sidebar-container a.faded {
+  color: #c0c078;
+}
+
 div.clearfix {
   clear: both;
 }
