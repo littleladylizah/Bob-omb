@@ -8,8 +8,6 @@
     <script type="text/javascript" src="js/sidebar.js"></script>
     <script type="text/javascript" src="js/draw.js"></script>
     <script type="text/javascript" src="js/overlay.js"></script>
-    <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/standalone.css"/>
-    <link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/overlay-apple.css"/>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
     <link rel="stylesheet" type="text/css" href="css/sidebar.css"/>
     <link rel="stylesheet" type="text/css" href="css/overlay.css"/>
@@ -21,7 +19,7 @@
       <canvas id="player-canvas" width="420" height="420"></canvas>
       <canvas id="enemy-canvas" width="420" height="420"></canvas>
       <div class="clearfix"></div>
-      <a id="lobby-link" href="#">Alusta uut mängu</a>
+      <a id="lobby-link" href="lobby.html" rel="#overlay">Alusta uut mängu</a>
     </div>
 
     <!-- the sidebar -->
@@ -32,14 +30,14 @@
         <a id="games" class="right faded" href="#">Mängud</a>
         <div class="clearfix"></div>
         <div id="sidebar-content">Siin kuvame vastavalt valikule kas käikude või mängude ajalugu</div>
-        <a id="leaderboard" class="right" href="external-content.htm" rel="#overlay">Edetabel</a>
+        <a id="leaderboard" class="right" href="leaderboard.html" rel="#overlay">Edetabel</a>
       </div>
     </div>
 
     <!-- the overlayed element -->
-    <div id="overlay" class="apple_overlay">
+    <div id="overlay">
       <!-- the external content is loaded inside this tag -->
-      <div class="contentWrap"></div>
+      <div id="content-wrap"></div>
     </div>
   </body>
 </html>
