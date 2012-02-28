@@ -8,7 +8,13 @@ body {
 
 h1 {
   font-size: 9.6em;
-  margin: 0.6em;
+  margin-left: 0.1em;
+}
+
+a {
+  color: #609000;
+  font-size: 2.4em;
+  text-decoration: none;
 }
 
 #sidebar {
@@ -52,8 +58,8 @@ h1 {
 
 #player-canvas {
   float: left;
-  margin-top: 20px;
-  margin-right: 20px;
+  margin: 20px;
+  margin-left: 0px;
   background: url(../img/board-a.png);
 }
 
@@ -61,10 +67,8 @@ h1 {
   background: url(../img/board-b.png);
 }
 
-a {
-  color: #609000;
-  font-size: 3.6em;
-  text-decoration: none;
+#lobby {
+  margin-left: 1em
 }
 
 div.clearfix {
