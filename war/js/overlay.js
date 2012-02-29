@@ -14,4 +14,5 @@ $(function() {
 
 $("div.lobby li, #new-game").click(function() {
   $("a[rel]").overlay({api: true}).close();
+  showBoats();
 });
