@@ -1,0 +1,55 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+<!--
+	This is a jQuery Tools standalone demo. Feel free to copy/paste.
+	                                                         
+	http://flowplayer.org/tools/demos/
+	
+	Do *not* reference CSS files and images from flowplayer.org when in production  
+
+	Enjoy!
+-->
+
+<head>
+	<script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
+	<script src="js/overlay.js"></script>
+	<link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/standalone.css"/>
+	<link rel="stylesheet" type="text/css" href="http://static.flowplayer.org/tools/css/overlay-apple.css"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	
+</head>
+
+<body>
+
+
+
+<!-- external page is given in the href attribute (as it should be) -->
+<a href="external-content.htm" rel="#overlay" style="text-decoration:none">
+
+	<!-- remember that you can use any element inside the trigger -->
+	<button type="button">Show external page in overlay</button>	
+</a>
+
+<!-- another link. uses the same overlay -->
+<a href="external-content2.htm" rel="#overlay" style="text-decoration:none">
+	<button type="button">Show another page</button>
+</a>
+
+
+<!-- overlayed element -->
+<div class="apple_overlay" id="overlay">
+
+	<!-- the external content is loaded inside this tag -->
+	<div class="contentWrap"></div>
+
+</div>
+
+</body>
+
+</html>
+

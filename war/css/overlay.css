@@ -1,10 +1,11 @@
 /* Styling needed to contain loaded content in our overlay window */
 
 #overlay {
-  color: #d8d8a8;
+  color: #609000;
+  font-size: 14px;
   display: none;
-  height: 500px;
-  width: 640px;
+  height: 350px;
+  width: 350px;
   padding: 35px;
   background-image: url(../img/overlay.png);
 }
@@ -22,4 +23,24 @@
 #overlay #content-wrap {
   height: 100%;
   overflow-y: auto;
+}
+
+div.lobby {
+  top: 40px;
+  left: 40px;
+  height: 350px; 
+  background: #f0f0d8;
+  text-align: center;
+}
+
+div.leaderboard {
+  top: 40px;
+  left: 40px;
+  height: 350px; 
+  background: #f0f0d8;
+  text-align: left;
+}
+
+h_overlay {
+  font-size: 22px;
 }
