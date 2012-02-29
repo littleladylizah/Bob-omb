@@ -11,3 +11,7 @@ $(function() {
     }
   });
 });
+
+$("#new-game").click(function() {
+  $("a[rel]").overlay({api: true}).close();
+});
