@@ -9,11 +9,13 @@ body {
 h1 {
   font-size: 9.6em;
   margin-left: 0.1em;
+  cursor: default;
 }
 
 h2 {
   font-size: 3.2em;
   margin-bottom: 0.4em;
+  cursor: default;
 }
 
 a {
