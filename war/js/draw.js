@@ -13,6 +13,15 @@ boatMiddleHit.src = "img/boat-middle-hit.png";
 var boatRightHit = new Image();
 boatRightHit.src = "img/boat-right-hit.png";
 
+/* http://stackoverflow.com/a/5417934 */
+var getMousePosition = function(e) {
+  canoff = $(e.target).offset();
+  x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoff.left);
+  y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoff.top) + 1;
+
+  return [x, y];
+};
+
 // Temporary code to test <canvas>
 var drawPlayer = function() {
   var canvas = document.getElementById("player-canvas");
@@ -56,4 +65,10 @@ var drawTest = function() {
   drawEnemy();
 };
 
-addEvent(window, "load", drawTest);
+$(window).load(function() {
+  drawTest();
+
+  $("#player-canvas, #enemy-canvas").click(function(e) {
+    alert(getMousePosition(e));
+  });
+});
