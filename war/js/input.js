@@ -1,6 +1,16 @@
 // Handle clicks on the canvases
 
 /* http://stackoverflow.com/a/5417934 */
+
+var myBoardElements = new Array(10);
+var enemyBoardElements = new Array(10);
+
+for (i=0; i<10; i++) {
+	myBoardElements[i] = new Array(10);
+	enemyBoardElements[i] = new Array(10);
+	enemyBoardElements[i][i] = "boat";
+}
+
 var getMousePosition = function(e) {
   var canoff = $(e.target).offset();
   var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoff.left);
@@ -10,11 +20,26 @@ var getMousePosition = function(e) {
 };
 
 var handlePlayerCanvasClick = function(x, y) {
+	
+  if (myBoardElements[x][y] == "forbidden") {
+  	return;
+  } 
+  
   drawBoat(true, x, y);
+  myBoardElements[x][y] = "boat";
+  addForbiddenElements(x,y);
+    
 }
 
 var handleEnemyCanvasClick = function(x, y) {
-  drawHitBoat(false, x, y);
+  
+  if (enemyBoardElements[x][y] == null) {
+    drawMiss(false, x, y);
+  }
+  
+  else {
+  	drawHitBoat(false, x, y);
+  } 
 }
 
 var handleCanvasClick = function(player, e) {
@@ -29,6 +54,30 @@ var handleCanvasClick = function(player, e) {
   } else {
     handleEnemyCanvasClick(x, y);
   }
+}
+
+var addForbiddenElements = function(x, y) {
+  
+  if (x>0 && y>0) {
+    drawMiss(true, x-1, y-1);
+    myBoardElements[x-1][y-1] = "forbidden";
+  }
+  
+  if (x<9 && y>0) {
+    drawMiss(true, x+1, y-1);
+    myBoardElements[x+1][y-1] = "forbidden";
+  }
+  
+  if (x>0 && y<9) {
+    drawMiss(true, x-1, y+1);
+    myBoardElements[x-1][y+1] = "forbidden";
+  }
+  
+  if (x<9 && y<9) {
+    drawMiss(true, x+1, y+1);
+    myBoardElements[x+1][y+1] = "forbidden";
+  }
+
 }
 
 $(window).load(function() {

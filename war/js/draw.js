@@ -16,6 +16,9 @@ boatSingle.src = "img/boat-single.png";
 var boatSingleHit = new Image();
 boatSingleHit.src = "img/boat-single-hit.png";
 
+var miss = new Image();
+miss.src = "img/cross.png";
+
 //var boatLeft = new Image();
 //boatLeft.src = "img/boat-left.png";
 
@@ -49,6 +52,10 @@ var drawBoat = function(player, x, y) {
 
 var drawHitBoat = function(player, x, y) {
   drawImage(boatSingleHit, player, x, y);
+};
+
+var drawMiss = function(player, x, y) {
+  drawImage(miss, player, x, y);
 };
 
 /*
