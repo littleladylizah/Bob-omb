@@ -1,11 +1,19 @@
-/* Global variables also used in input.js */
+// ------------------------------------------------------
+// Global variables and constants also used in input.js
+// ------------------------------------------------------
+
+var GRID_SIZE = 40;
+var PLAYER_OFF_X = 20;
+var PLAYER_OFF_Y = 0;
+var ENEMY_OFF_X = 0;
+var ENEMY_OFF_Y = 20;
+
 var gPlayerCanvas;
 var gEnemyCanvas;
-var gGridSize = 40;
-var gPlayerOffX = 20;
-var gPlayerOffY = 0;
-var gEnemyOffX = 0;
-var gEnemyOffY = 20;
+
+// -----------------
+// Load the images
+// -----------------
 
 var boatSingle = new Image();
 boatSingle.src = "img/boat-single.png";
@@ -25,21 +33,25 @@ miss.src = "img/cross.png";
 //var boatRightHit = new Image();
 //boatRightHit.src = "img/boat-right-hit.png";
 
+// -------------------
+// Drawing functions
+// -------------------
+
 var drawImage = function(image, player, x, y) {
   // The following works because JavaScript has no block scope
   if (player) {
     var ctx = gPlayerCanvas[0].getContext("2d");
-    var offX = gPlayerOffX;
-    var offY = gPlayerOffY;
+    var offX = PLAYER_OFF_X;
+    var offY = PLAYER_OFF_Y;
   } else {
     var ctx = gEnemyCanvas[0].getContext("2d");
-    var offX = gEnemyOffX;
-    var offY = gEnemyOffY;
+    var offX = ENEMY_OFF_X;
+    var offY = ENEMY_OFF_Y;
   }
 
   ctx.save();
   ctx.translate(offX, offY);
-  ctx.drawImage(image, gGridSize * x, gGridSize * y);
+  ctx.drawImage(image, GRID_SIZE * x, GRID_SIZE * y);
   ctx.restore();
 };
 
@@ -55,45 +67,9 @@ var drawMiss = function(player, x, y) {
   drawImage(miss, player, x, y);
 };
 
-/*
-// Temporary code to test <canvas>
-var drawPlayer = function() {
-  var canvas = document.getElementById("player-canvas");
-  var ctx = canvas.getContext("2d");
-  ctx.save();
-  ctx.translate(20, 0);
-  ctx.drawImage(boatSingle, 40, 40);
-  ctx.drawImage(boatLeft, 40 * 7, 40 * 5);
-  ctx.drawImage(boatRightHit, 40 * 8, 40 * 5);
-  ctx.drawImage(miss, 120, 200);
-  ctx.drawImage(miss, 200, 280);
-  ctx.drawImage(miss, 160, 320);
-  ctx.restore();
-};
-
-var drawEnemy = function() {
-  var canvas = document.getElementById("enemy-canvas");
-  var ctx = canvas.getContext("2d");
-  ctx.save();
-  ctx.translate(0, 20);
-  ctx.drawImage(boatMiddleHit, 40 * 5, 40 * 2);
-  ctx.drawImage(boatMiddleHit, 40 * 6, 40 * 2);
-  ctx.drawImage(boatRightHit, 40 * 7, 40 * 2);
-  ctx.drawImage(miss, 80, 200);
-  ctx.drawImage(miss, 240, 120);
-  ctx.drawImage(miss, 160, 320);
-  ctx.translate(40 * 5, 40 * 3);
-  ctx.rotate(Math.PI);
-  ctx.drawImage(boatRightHit, 0, 0);
-  ctx.rotate(Math.PI / 2);
-  ctx.translate(40 * -3, 40);
-  ctx.drawImage(boatRightHit, 0, 0);
-  ctx.rotate(Math.PI);
-  ctx.translate(0, -40);
-  ctx.drawImage(boatRightHit, 0, 0);
-  ctx.restore();
-};
-*/
+// ---------------------------
+// Initialize on window load
+// ---------------------------
 
 $(window).load(function() {
   gPlayerCanvas = $("#player-canvas");
