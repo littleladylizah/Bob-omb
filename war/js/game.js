@@ -38,15 +38,15 @@ var addForbiddenElements = function(x, y) {
     forbidSquare(x - 1, y - 1);
   }
 
-  if (x < 9 && y > 0) {
+  if (x < GRID_SQUARES - 1 && y > 0) {
     forbidSquare(x + 1, y - 1);
   }
 
-  if (x > 0 && y < 9) {
+  if (x > 0 && y < GRID_SQUARES - 1) {
     forbidSquare(x - 1, y + 1);
   }
 
-  if (x < 9 && y < 9) {
+  if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
     forbidSquare(x + 1, y + 1);
   }
 };
