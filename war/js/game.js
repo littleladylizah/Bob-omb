@@ -2,45 +2,64 @@
 // Boat positioning logic
 // ------------------------
 
+var GRID_SQUARES = 10;
 var ELEMENT_BOAT = "boat";
 var ELEMENT_FORBIDDEN = "forbidden";
 
-var playerBoardElements = new Array(10);
-var enemyBoardElements = new Array(10);
+var playerBoardElements = new Array(GRID_SQUARES);
+var enemyBoardElements = new Array(GRID_SQUARES);
 
-for (i=0; i<10; i++) {
-  playerBoardElements[i] = new Array(10);
-  enemyBoardElements[i] = new Array(10);
-  enemyBoardElements[i][i] = ELEMENT_BOAT;;
+for (i = 0; i < GRID_SQUARES; i++) {
+  playerBoardElements[i] = new Array(GRID_SQUARES);
+  enemyBoardElements[i] = new Array(GRID_SQUARES);
+  enemyBoardElements[i][i] = ELEMENT_BOAT;
+}
+
+var forbidSquare = function(x, y) {
+  if (playerBoardElements[x][y] == null) {
+    drawMiss(true, x, y);
+    playerBoardElements[x][y] = ELEMENT_FORBIDDEN;
+  }
 }
 
 var addForbiddenElements = function(x, y) {
-
-  if (x>0 && y>0) {
-    drawMiss(true, x-1, y-1);
-    playerBoardElements[x-1][y-1] = ELEMENT_FORBIDDEN;
+  if (x > 0 && y > 0) {
+    forbidSquare(x - 1, y - 1);
   }
 
-  if (x<9 && y>0) {
-    drawMiss(true, x+1, y-1);
-    playerBoardElements[x+1][y-1] = ELEMENT_FORBIDDEN;
+  if (x < 9 && y > 0) {
+    forbidSquare(x + 1, y - 1);
   }
 
-  if (x>0 && y<9) {
-    drawMiss(true, x-1, y+1);
-    playerBoardElements[x-1][y+1] = ELEMENT_FORBIDDEN;
+  if (x > 0 && y < 9) {
+    forbidSquare(x - 1, y + 1);
   }
 
-  if (x<9 && y<9) {
-    drawMiss(true, x+1, y+1);
-    playerBoardElements[x+1][y+1] = ELEMENT_FORBIDDEN;
+  if (x < 9 && y < 9) {
+    forbidSquare(x + 1, y + 1);
   }
-
 }
 
 // -----------------------
 // Player input handling
 // -----------------------
+
+var handlePlayerCanvasClick = function(x, y) {
+  if (playerBoardElements[x][y] != null) {
+    return;
+  }
+  drawBoat(true, x, y);
+  playerBoardElements[x][y] = ELEMENT_BOAT;
+  addForbiddenElements(x,y);
+}
+
+var handleEnemyCanvasClick = function(x, y) {
+  if (enemyBoardElements[x][y] == null) {
+    drawMiss(false, x, y);
+  } else {
+    drawHitBoat(false, x, y);
+  }
+}
 
 /* function from http://stackoverflow.com/a/5417934 */
 var getMousePosition = function(e) {
@@ -51,33 +70,10 @@ var getMousePosition = function(e) {
   return [x, y];
 };
 
-var handlePlayerCanvasClick = function(x, y) {
-
-  if (playerBoardElements[x][y] == ELEMENT_FORBIDDEN) {
-    return;
-  }
-
-  drawBoat(true, x, y);
-  playerBoardElements[x][y] = ELEMENT_BOAT;
-  addForbiddenElements(x,y);
-
-}
-
-var handleEnemyCanvasClick = function(x, y) {
-
-  if (enemyBoardElements[x][y] == null) {
-    drawMiss(false, x, y);
-  }
-
-  else {
-    drawHitBoat(false, x, y);
-  }
-}
-
 var handleCanvasClick = function(player, e) {
   var pos = getMousePosition(e);
-  var x = Math.floor((pos[0] - (player ? PLAYER_OFF_X : ENEMY_OFF_X)) / GRID_SIZE);
-  var y = Math.floor((pos[1] - (player ? PLAYER_OFF_Y : ENEMY_OFF_Y)) / GRID_SIZE);
+  var x = Math.floor((pos[0] - (player ? PLAYER_OFF_X : ENEMY_OFF_X)) / SQUARE_SIZE);
+  var y = Math.floor((pos[1] - (player ? PLAYER_OFF_Y : ENEMY_OFF_Y)) / SQUARE_SIZE);
   if (x < 0 || x > 9 || y < 0 || y > 9) {
     return;
   }

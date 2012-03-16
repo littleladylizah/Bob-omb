@@ -2,7 +2,7 @@
 // Global variables and constants also used in input.js
 // ------------------------------------------------------
 
-var GRID_SIZE = 40;
+var SQUARE_SIZE = 40;
 var PLAYER_OFF_X = 20;
 var PLAYER_OFF_Y = 0;
 var ENEMY_OFF_X = 0;
@@ -51,7 +51,7 @@ var drawImage = function(image, player, x, y) {
 
   ctx.save();
   ctx.translate(offX, offY);
-  ctx.drawImage(image, GRID_SIZE * x, GRID_SIZE * y);
+  ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
   ctx.restore();
 };
 
