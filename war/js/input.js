@@ -1,7 +1,5 @@
 // Handle clicks on the canvases
 
-/* http://stackoverflow.com/a/5417934 */
-
 var myBoardElements = new Array(10);
 var enemyBoardElements = new Array(10);
 
@@ -11,6 +9,7 @@ for (i=0; i<10; i++) {
 	enemyBoardElements[i][i] = "boat";
 }
 
+/* http://stackoverflow.com/a/5417934 */
 var getMousePosition = function(e) {
   var canoff = $(e.target).offset();
   var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoff.left);

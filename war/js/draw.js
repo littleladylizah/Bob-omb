@@ -7,9 +7,6 @@ var gPlayerOffY = 0;
 var gEnemyOffX = 0;
 var gEnemyOffY = 20;
 
-//var miss = new Image();
-//miss.src = "img/cross.png";
-
 var boatSingle = new Image();
 boatSingle.src = "img/boat-single.png";
 
