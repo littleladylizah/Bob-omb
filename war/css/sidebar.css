@@ -71,6 +71,14 @@
   margin: 0px;
 }
 
+#sidebar-content div p {
+  cursor: pointer;
+}
+
+#sidebar-content div p:hover {
+  outline: 1px solid #c0c078;
+}
+
 #sidebar-content #confirm-boats {
   display: block;
   margin: 0em auto;

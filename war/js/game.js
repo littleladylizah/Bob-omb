@@ -9,18 +9,29 @@ var ELEMENT_FORBIDDEN = "forbidden";
 var playerBoardElements = new Array(GRID_SQUARES);
 var enemyBoardElements = new Array(GRID_SQUARES);
 
+var boatSelected = 0;
+
 for (i = 0; i < GRID_SQUARES; i++) {
   playerBoardElements[i] = new Array(GRID_SQUARES);
   enemyBoardElements[i] = new Array(GRID_SQUARES);
   enemyBoardElements[i][i] = ELEMENT_BOAT;
 }
 
+var cancelCurrentBoat = function() {
+  // TODO lõpeta praeguse laeva asetamine
+};
+
+var selectBoat = function(length) {
+  cancelCurrentBoat();
+  boatSelected = length;
+};
+
 var forbidSquare = function(x, y) {
   if (playerBoardElements[x][y] == null) {
     drawMiss(true, x, y);
     playerBoardElements[x][y] = ELEMENT_FORBIDDEN;
   }
-}
+};
 
 var addForbiddenElements = function(x, y) {
   if (x > 0 && y > 0) {
@@ -38,7 +49,7 @@ var addForbiddenElements = function(x, y) {
   if (x < 9 && y < 9) {
     forbidSquare(x + 1, y + 1);
   }
-}
+};
 
 // -----------------------
 // Player input handling

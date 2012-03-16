@@ -21,7 +21,20 @@ var showGames = function() {
 var showBoats = function() {
   movesLink.addClass("faded");
   gamesLink.addClass("faded");
-  content.load("boats.html");
+  content.load("boats.html", function() {
+    $("#sidebar-content #boat4").click(function() {
+      selectBoat(4);
+    });
+    $("#sidebar-content #boat3").click(function() {
+      selectBoat(3);
+    });
+    $("#sidebar-content #boat2").click(function() {
+      selectBoat(2);
+    });
+    $("#sidebar-content #boat1").click(function() {
+      selectBoat(1);
+    });
+  });
 }
 
 $(window).load(function() {
