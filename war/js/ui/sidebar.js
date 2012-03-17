@@ -34,6 +34,9 @@ var showBoats = function() {
     $("#sidebar-content #boat1").click(function() {
       selectBoat(1);
     });
+    $("#sidebar-content #confirm-boats").click(function() {
+      startGame();
+    })
   });
 }
 
