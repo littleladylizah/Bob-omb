@@ -76,9 +76,7 @@ var isOutOfBounds = function(x, y) {
 };
 
 var hasBoat = function(x, y) {
-  return !isOutOfBounds(x, y)
-      && (playerBoardElements[x][y] == ELEMENT_BOAT
-          || playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT);
+  return !isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_BOAT;
 };
 
 var isForbidden = function(x, y) {
