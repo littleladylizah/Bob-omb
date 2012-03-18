@@ -43,6 +43,7 @@ var resetGame = function() {
 };
 
 var startGame = function() {
+  removeForbidden();
   gameStarted = true;
   turnOfPlayer = 1;
 };
@@ -197,6 +198,16 @@ var finishBoat = function(x, y) {
   boatSelected = 0;
   drawnParts = 0;
 }
+
+var removeForbidden = function() {
+  for (x = 0; x < GRID_SQUARES; x++) {
+    for (y = 0; y < GRID_SQUARES; y++) {
+      if (playerBoardElements[x][y] == ELEMENT_FORBIDDEN) {
+        clearSquare(x, y);
+      }
+    }
+  }
+};
 
 // -----------------------
 // Player input handling
