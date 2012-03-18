@@ -37,7 +37,13 @@ miss.src = "img/cross.png";
 // Drawing functions
 // -------------------
 
-var drawImage = function(image, player, x, y) {
+var resetCanvases = function() {
+  // 420 is hard-coded into index.html so let's do it here too
+  gPlayerCanvas[0].getContext("2d").clearRect(0, 0, 420, 420);
+  gEnemyCanvas[0].getContext("2d").clearRect(0, 0, 420, 420);
+};
+
+var doOnCanvas = function(player, callback) {
   // The following works because JavaScript has no block scope
   if (player) {
     var ctx = gPlayerCanvas[0].getContext("2d");
@@ -51,8 +57,20 @@ var drawImage = function(image, player, x, y) {
 
   ctx.save();
   ctx.translate(offX, offY);
-  ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
+  callback(ctx);
   ctx.restore();
+};
+
+var drawEmpty = function(player, x, y) {
+  doOnCanvas(player, function(ctx) {
+    ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
+  });
+};
+
+var drawImage = function(image, player, x, y) {
+  doOnCanvas(player, function(ctx) {
+    ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
+  });
 };
 
 var drawBoat = function(player, x, y) {

@@ -18,20 +18,33 @@ var direction;
 var turnOfPlayer;
 var gameStarted = false;
 
-for (i = 0; i < GRID_SQUARES; i++) {
-  playerBoardElements[i] = new Array(GRID_SQUARES);
-  enemyBoardElements[i] = new Array(GRID_SQUARES);
-  enemyBoardElements[i][i] = ELEMENT_BOAT;
-}
+var resetGame = function() {
+  boatSelected = 0;
+  drawnParts = 0;
+  gameStarted = false;
 
-for (i = 0; i < 4; i++) {
-  boatsLeft[i] = 4 - i;
-}
+  for (i = 0; i < GRID_SQUARES; i++) {
+    playerBoardElements[i] = new Array(GRID_SQUARES);
+    enemyBoardElements[i] = new Array(GRID_SQUARES);
+    enemyBoardElements[i][i] = ELEMENT_BOAT;
+  }
+
+  for (i = 0; i < 4; i++) {
+    boatsLeft[i] = 4 - i;
+  }
+
+  resetCanvases();
+};
+
+var clearSquare = function(x, y) {
+  playerBoardElements[x][y] = null;
+  drawEmpty(true, x, y);
+};
 
 var cancelCurrentBoat = function() {
   //TODO: vaja oleks funktsiooni ka laevade visuaalseks kustutamiseks laualt
   for (x = 0; x < GRID_SQUARES; x++) {
-    for (y = 0; y < GRID_SQUARES; y++)
+    for (y = 0; y < GRID_SQUARES; y++) {
       if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
         playerBoardElements[x][y] = null;
         if (x > 0 && y > 0) {
@@ -47,6 +60,7 @@ var cancelCurrentBoat = function() {
           playerBoardElements[x + 1][y + 1] = null;
         }
       }
+    }
   }
 };
 
@@ -276,6 +290,7 @@ var randomMove = function() {
 // ---------------------------
 
 $(window).load(function() {
+  resetGame();
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });
