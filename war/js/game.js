@@ -95,7 +95,7 @@ var isForbidden = function(x, y) {
   }
 };
 
-var cancelCurrentBoat = function() {
+var clearCurrentBoat = function() {
   for (x = 0; x < GRID_SQUARES; x++) {
     for (y = 0; y < GRID_SQUARES; y++) {
       if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
@@ -116,16 +116,17 @@ var cancelCurrentBoat = function() {
     }
   }
   drawnParts = 0;
-  boatSelected = 0;
-  boatCounter = null;
-  if (boatUnselectCallback != null) {
-    boatUnselectCallback();
-  }
-  boatUnselectCallback = null;
 };
 
 var selectBoat = function(length, counter, callback) {
-  cancelCurrentBoat();
+  clearCurrentBoat();
+  if (length != boatSelected && boatUnselectCallback != null) {
+    boatUnselectCallback();
+  }
+  boatSelected = 0;
+  boatCounter = null;
+  boatUnselectCallback = null;
+
   if (boatsLeft[length - 1] <= 0) {
     callback();
     return;
