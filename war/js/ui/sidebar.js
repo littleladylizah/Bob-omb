@@ -42,7 +42,9 @@ var showBoats = function() {
       boatTypeClicked($(this), 1);
     });
     $("#sidebar-content #confirm-boats").click(function() {
-      startGame();
+      if (startGame()) {
+        showMoves();
+      }
     })
   });
 }

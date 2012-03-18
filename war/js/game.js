@@ -45,9 +45,13 @@ var resetGame = function() {
 };
 
 var startGame = function() {
+  if (!boatsLeft.every(function(val) { return val == 0; })) {
+    return false;
+  }
   removeForbidden();
   gameStarted = true;
   turnOfPlayer = 1;
+  return true;
 };
 
 var randomMove = function() {
