@@ -69,14 +69,20 @@
 
 #sidebar-content p img {
   margin: 0px;
+  vertical-align: middle;
 }
 
 #sidebar-content div p {
   cursor: pointer;
 }
 
-#sidebar-content div p:hover {
+#sidebar-content div p.selected {
+  cursor: pointer;
   outline: 1px solid #c0c078;
+}
+
+#sidebar-content div p:hover {
+  outline: 1px solid #609000;
 }
 
 #sidebar-content #confirm-boats {

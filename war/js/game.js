@@ -16,6 +16,7 @@ var boatsLeft = new Array(4);
 var boatSelected = 0;
 var drawnParts = 0;
 var boatCounter;
+var boatUnselectCallback;
 
 var direction;
 var turnOfPlayer;
@@ -113,15 +114,21 @@ var cancelCurrentBoat = function() {
   drawnParts = 0;
   boatSelected = 0;
   boatCounter = null;
+  if (boatUnselectCallback != null) {
+    boatUnselectCallback();
+  }
+  boatUnselectCallback = null;
 };
 
-var selectBoat = function(length, counter) {
+var selectBoat = function(length, counter, callback) {
   cancelCurrentBoat();
   if (boatsLeft[length - 1] <= 0) {
+    callback();
     return;
   }
   boatCounter = counter;
   boatSelected = length;
+  boatUnselectCallback = callback;
 };
 
 var forbidSquare = function(x, y) {
@@ -223,6 +230,8 @@ var finishBoat = function(x, y) {
   if (boatsLeft[boatSelected - 1] <= 0) {
     boatSelected = 0;
     boatCounter = null;
+    boatUnselectCallback();
+    boatUnselectCallback = null;
   }
 }
 
