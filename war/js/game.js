@@ -15,6 +15,7 @@ var boatsLeft = new Array(4);
 
 var boatSelected = 0;
 var drawnParts = 0;
+var boatCounter;
 
 var direction;
 var turnOfPlayer;
@@ -109,12 +110,18 @@ var cancelCurrentBoat = function() {
       }
     }
   }
+  drawnParts = 0;
+  boatSelected = 0;
+  boatCounter = null;
 };
 
-var selectBoat = function(length) {
+var selectBoat = function(length, counter) {
   cancelCurrentBoat();
+  if (boatsLeft[length - 1] <= 0) {
+    return;
+  }
+  boatCounter = counter;
   boatSelected = length;
-  drawnParts = 0;
 };
 
 var forbidSquare = function(x, y) {
@@ -209,8 +216,14 @@ var finishBoat = function(x, y) {
   }
 
   boatsLeft[boatSelected - 1] -= 1;
-  boatSelected = 0;
+  boatCounter.text(boatsLeft[boatSelected - 1]);
   drawnParts = 0;
+
+  // Unselect boat if we've run out of stock
+  if (boatsLeft[boatSelected - 1] <= 0) {
+    boatSelected = 0;
+    boatCounter = null;
+  }
 }
 
 var removeForbidden = function() {

@@ -23,16 +23,16 @@ var showBoats = function() {
   gamesLink.addClass("faded");
   content.load("boats.html", function() {
     $("#sidebar-content #boat4").click(function() {
-      selectBoat(4);
+      selectBoat(4, $("#sidebar-content #boat4-left"));
     });
     $("#sidebar-content #boat3").click(function() {
-      selectBoat(3);
+      selectBoat(3, $("#sidebar-content #boat3-left"));
     });
     $("#sidebar-content #boat2").click(function() {
-      selectBoat(2);
+      selectBoat(2, $("#sidebar-content #boat2-left"));
     });
     $("#sidebar-content #boat1").click(function() {
-      selectBoat(1);
+      selectBoat(1, $("#sidebar-content #boat1-left"));
     });
     $("#sidebar-content #confirm-boats").click(function() {
       startGame();
