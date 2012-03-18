@@ -71,22 +71,41 @@ var clearSquare = function(x, y) {
   drawEmpty(true, x, y);
 };
 
+var isOutOfBounds = function(x, y) {
+  return x < 0 || y < 0 || x >= GRID_SQUARES || y >= GRID_SQUARES;
+};
+
+var hasBoat = function(x, y) {
+  return !isOutOfBounds(x, y)
+      && (playerBoardElements[x][y] == ELEMENT_BOAT
+          || playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT);
+};
+
+var isForbidden = function(x, y) {
+  for (var i = x - 1; i <= x + 1; i++) {
+    for (var j = y - 1; j <= y + 1; j++) {
+      if (hasBoat(i, j)) {
+        return true;
+      }
+    }
+  }
+};
+
 var cancelCurrentBoat = function() {
-  //FIXME: siin on loogika katki, kuna pooleli laevast diagonaalne jupp ei pruugi null olla
   for (x = 0; x < GRID_SQUARES; x++) {
     for (y = 0; y < GRID_SQUARES; y++) {
       if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
         clearSquare(x, y);
-        if (x > 0 && y > 0) {
+        if (x > 0 && y > 0 && !isForbidden(x - 1, y - 1)) {
           clearSquare(x - 1, y - 1);
         }
-        if (x > 0 && y < GRID_SQUARES - 1) {
+        if (x > 0 && y < GRID_SQUARES - 1 && !isForbidden(x - 1, y + 1)) {
           clearSquare(x - 1, y + 1);
         }
-        if (x < GRID_SQUARES - 1 && y > 0) {
+        if (x < GRID_SQUARES - 1 && y > 0 && !isForbidden(x + 1, y - 1)) {
           clearSquare(x + 1, y - 1);
         }
-        if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
+        if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1 && !isForbidden(x + 1, y + 1)) {
           clearSquare(x + 1, y + 1);
         }
       }
@@ -101,10 +120,7 @@ var selectBoat = function(length) {
 };
 
 var forbidSquare = function(x, y) {
-  if (x < 0 || y < 0 || x >= GRID_SQUARES || y >= GRID_SQUARES) {
-    return;
-  }
-  if (playerBoardElements[x][y] == null) {
+  if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == null) {
     drawMiss(true, x, y);
     playerBoardElements[x][y] = ELEMENT_FORBIDDEN;
   }
