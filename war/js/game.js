@@ -4,8 +4,10 @@
 
 var GRID_SQUARES = 10;
 var ELEMENT_BOAT = "boat";
+var ELEMENT_HIT_BOAT = "hit-boat";
 var ELEMENT_PARTIAL_BOAT = "partial";
 var ELEMENT_FORBIDDEN = "forbidden";
+var ELEMENT_MISS = "miss";
 var DIRECTION_H = "horizontal";
 var DIRECTION_V = "vertical";
 
@@ -54,19 +56,56 @@ var startGame = function() {
   return true;
 };
 
-var randomMove = function() {
-  var randomX = Math.floor(Math.random()*10);
-  var randomY = Math.floor(Math.random()*10);
+// --------------
+// Temporary AI
+// --------------
+
+var enemyMove = function() {
+  // Select a random square the AI hasn't bombed yet
+  do {
+    var randomX = Math.floor(Math.random()*10);
+    var randomY = Math.floor(Math.random()*10);
+  } while (playerBoardElements[randomX] != null
+      && playerBoardElements[randomX][randomY] != null
+      && (playerBoardElements[randomX][randomY] == ELEMENT_MISS
+          || playerBoardElements[randomX][randomY] == ELEMENT_HIT_BOAT));
+
   console.log("x: " + randomX + ", y: " + randomY);
   console.log(playerBoardElements[randomX][randomY]);
-  if (playerBoardElements[randomX][randomY] == ELEMENT_BOAT) {
-    drawHitBoat(true, randomX, randomY);
-  }
-  else {
-    drawMiss(true, randomX, randomY);
-  }
-  turnOfPlayer= 1;
+  bombPlayer(randomX, randomY);
 }
+
+// ---------------
+// Bombing logic
+// ---------------
+
+var bombPlayer = function(x, y) {
+  if (playerBoardElements[x][y] == ELEMENT_BOAT) {
+    playerBoardElements[x][y] = ELEMENT_HIT_BOAT;
+    drawEmpty(true, x, y);
+    drawHitBoat(true, x, y);
+    enemyMove();
+  } else {
+    playerBoardElements[x][y] = ELEMENT_MISS;
+    drawMiss(true, x, y);
+    turnOfPlayer = 1;
+  }
+};
+
+var bombEnemy = function(x, y) {
+  if (enemyBoardElements[x][y] == ELEMENT_MISS) {
+    return;
+  }
+  if (enemyBoardElements[x][y] == null) {
+    enemyBoardElements[x][y] = ELEMENT_MISS;
+    drawMiss(false, x, y);
+    turnOfPlayer = 2;
+    enemyMove();
+  } else {
+    enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
+    drawHitBoat(false, x, y);
+  }
+};
 
 // ------------------------
 // Boat positioning logic
@@ -289,13 +328,7 @@ var handleEnemyCanvasClick = function(x, y) {
   if (turnOfPlayer != 1) {
     return;
   }
-  if (enemyBoardElements[x][y] == null) {
-    drawMiss(false, x, y);
-    turnOfPlayer = 2;
-    randomMove();
-  } else {
-    drawHitBoat(false, x, y);
-  }
+  bombEnemy(x, y);
 };
 
 /* function from http://stackoverflow.com/a/5417934 */
