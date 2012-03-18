@@ -69,6 +69,7 @@ var drawEmpty = function(player, x, y) {
 
 var drawImage = function(image, player, x, y) {
   doOnCanvas(player, function(ctx) {
+    ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
     ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
   });
 };

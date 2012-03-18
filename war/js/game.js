@@ -1,11 +1,13 @@
-// ------------------------
-// Boat positioning logic
-// ------------------------
+// ------------------
+// Global variables
+// ------------------
 
 var GRID_SQUARES = 10;
 var ELEMENT_BOAT = "boat";
 var ELEMENT_PARTIAL_BOAT = "partial";
 var ELEMENT_FORBIDDEN = "forbidden";
+var DIRECTION_H = "horizontal";
+var DIRECTION_V = "vertical";
 
 var playerBoardElements = new Array(GRID_SQUARES);
 var enemyBoardElements = new Array(GRID_SQUARES);
@@ -17,6 +19,10 @@ var drawnParts = 0;
 var direction;
 var turnOfPlayer;
 var gameStarted = false;
+
+// -----------------------
+// Game state handling
+// -----------------------
 
 var resetGame = function() {
   boatSelected = 0;
@@ -36,28 +42,51 @@ var resetGame = function() {
   resetCanvases();
 };
 
+var startGame = function() {
+  gameStarted = true;
+  turnOfPlayer = 1;
+};
+
+var randomMove = function() {
+  var randomX = Math.floor(Math.random()*10);
+  var randomY = Math.floor(Math.random()*10);
+  console.log("x: " + randomX + ", y: " + randomY);
+  console.log(playerBoardElements[randomX][randomY]);
+  if (playerBoardElements[randomX][randomY] == ELEMENT_BOAT) {
+    drawHitBoat(true, randomX, randomY);
+  }
+  else {
+    drawMiss(true, randomX, randomY);
+  }
+  turnOfPlayer= 1;
+}
+
+// ------------------------
+// Boat positioning logic
+// ------------------------
+
 var clearSquare = function(x, y) {
   playerBoardElements[x][y] = null;
   drawEmpty(true, x, y);
 };
 
 var cancelCurrentBoat = function() {
-  //TODO: vaja oleks funktsiooni ka laevade visuaalseks kustutamiseks laualt
+  //FIXME: siin on loogika katki, kuna pooleli laevast diagonaalne jupp ei pruugi null olla
   for (x = 0; x < GRID_SQUARES; x++) {
     for (y = 0; y < GRID_SQUARES; y++) {
       if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
-        playerBoardElements[x][y] = null;
+        clearSquare(x, y);
         if (x > 0 && y > 0) {
-          playerBoardElements[x - 1][y - 1] = null;
+          clearSquare(x - 1, y - 1);
         }
         if (x > 0 && y < GRID_SQUARES - 1) {
-          playerBoardElements[x - 1][y + 1] = null;
+          clearSquare(x - 1, y + 1);
         }
         if (x < GRID_SQUARES - 1 && y > 0) {
-          playerBoardElements[x + 1][y - 1] = null;
+          clearSquare(x + 1, y - 1);
         }
         if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
-          playerBoardElements[x + 1][y + 1] = null;
+          clearSquare(x + 1, y + 1);
         }
       }
     }
@@ -71,128 +100,102 @@ var selectBoat = function(length) {
 };
 
 var forbidSquare = function(x, y) {
+  if (x < 0 || y < 0 || x >= GRID_SQUARES || y >= GRID_SQUARES) {
+    return;
+  }
   if (playerBoardElements[x][y] == null) {
     drawMiss(true, x, y);
     playerBoardElements[x][y] = ELEMENT_FORBIDDEN;
   }
 };
 
-var addForbiddenElements = function(x, y) {
+var addForbiddenDiagonals = function(x, y) {
+  forbidSquare(x - 1, y - 1);
+  forbidSquare(x + 1, y - 1);
+  forbidSquare(x - 1, y + 1);
+  forbidSquare(x + 1, y + 1);
+};
 
-  if (x > 0 && y > 0) {
-    forbidSquare(x - 1, y - 1);
+var addForbiddenEnds = function(x, y) {
+  if (boatSelected == 1) {
+    forbidSquare(x + 1, y);
+    forbidSquare(x, y + 1);
+    forbidSquare(x - 1, y);
+    forbidSquare(x, y - 1);
+    return;
   }
 
-  if (x < GRID_SQUARES - 1 && y > 0) {
-    forbidSquare(x + 1, y - 1);
+  if (direction == DIRECTION_H) {
+    if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x + 1, y);
+      forbidSquare(x - boatSelected, y);
+      return;
+    }
+    if (x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x - 1, y);
+      forbidSquare(x + boatSelected, y);
+      return;
+    }
   }
 
-  if (x > 0 && y < GRID_SQUARES - 1) {
-    forbidSquare(x - 1, y + 1);
-  }
-
-  if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
-    forbidSquare(x + 1, y + 1);
+  if (direction == DIRECTION_V) {
+    if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x, y + 1);
+      forbidSquare(x, y - boatSelected);
+      return;
+    }
+    if (y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x, y - 1);
+      forbidSquare(x, y + boatSelected);
+      return;
+    }
   }
 };
 
-var addForbiddenEnds = function(x, y, boatSelected) {
-  if (direction == "horizontal" || boatSelected == 1) {
+var isNextHorizontal = function(x, y) {
+  return x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT
+      || x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT;
+};
 
-    if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-      if (x < GRID_SQUARES - 1) {
-        forbidSquare(x + 1, y);
-      }
-      if (x - boatSelected >= 0) {
-        forbidSquare(x - boatSelected, y);
-      }
-    }
-
-    else if (x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-      if (x > 0) {
-        forbidSquare(x - 1, y);
-      }
-      if (x + boatSelected < GRID_SQUARES) {
-        forbidSquare(x + boatSelected, y);
-      }
-    }
-  }
-
-  if (direction == "vertical" || boatSelected == 1) {
-
-    if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-      if (y < GRID_SQUARES - 1) {
-        forbidSquare(x, y + 1);
-      }
-      if (y - boatSelected >= 0) {
-        forbidSquare(x, y - boatSelected);
-      }
-    }
-
-    else if (y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-      if (y > 0) {
-        forbidSquare(x, y - 1);
-      }
-      if (y + boatSelected < GRID_SQUARES) {
-        forbidSquare(x, y + boatSelected);
-      }
-    }
-  }
+var isNextVertical = function(x, y) {
+  return y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT
+      || y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT;
 };
 
 var isNextPart = function(x, y) {
-  if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT ||
-    x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT ||
-    y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT ||
-    y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
-
-    return true;
-    }
-  else {
-    return false;
-  }
+  return isNextHorizontal(x, y) || isNextVertical(x, y);
 };
 
 var findDirection = function(x, y) {
-  if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT ||
-      x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT) {
-
-      return "horizontal";
-    }
-
-    else if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT ||
-        y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
-
-      return "vertical";
-    }
+  if (isNextHorizontal(x, y)) {
+    return DIRECTION_H;
+  } else if (isNextVertical(x, y)) {
+    return DIRECTION_V;
+  }
 };
 
 var finishBoat = function(x, y) {
-  addForbiddenEnds(x, y, boatSelected);
+  addForbiddenEnds(x, y);
 
-      if (direction == "horizontal") {
-        for (i = 0; i < GRID_SQUARES; i++) {
-          if (playerBoardElements[i][y] == ELEMENT_PARTIAL_BOAT) {
-            playerBoardElements[i][y] = ELEMENT_BOAT;
-          }
-        }
+  if (boatSelected == 1) {
+    playerBoardElements[x][y] = ELEMENT_BOAT;
+  } else if (direction == DIRECTION_H) {
+    for (i = 0; i < GRID_SQUARES; i++) {
+      if (playerBoardElements[i][y] == ELEMENT_PARTIAL_BOAT) {
+        playerBoardElements[i][y] = ELEMENT_BOAT;
       }
-
-      else if (direction == "vertical") {
-        for (i = 0; i < GRID_SQUARES; i++) {
-          if (playerBoardElements[x][i] == ELEMENT_PARTIAL_BOAT) {
-            playerBoardElements[x][i] = ELEMENT_BOAT;
-          }
-        }
+    }
+  } else if (direction == DIRECTION_V) {
+    for (i = 0; i < GRID_SQUARES; i++) {
+      if (playerBoardElements[x][i] == ELEMENT_PARTIAL_BOAT) {
+        playerBoardElements[x][i] = ELEMENT_BOAT;
       }
+    }
+  }
 
-      if (boatSelected == 1) {
-        playerBoardElements[x][y] = ELEMENT_BOAT;
-      }
-
-      boatsLeft[boatSelected - 1] -= 1;
-      boatSelected = 0;
-      drawnParts = 0;
+  boatsLeft[boatSelected - 1] -= 1;
+  boatSelected = 0;
+  drawnParts = 0;
 }
 
 // -----------------------
@@ -205,20 +208,20 @@ var handlePlayerCanvasClick = function(x, y) {
   console.log("boat selected: " + boatSelected);
   console.log(playerBoardElements[x][y]);
 
-  if (gameStarted == true) {
+  if (gameStarted) {
     return;
   }
-
   if (playerBoardElements[x][y] != null) {
     return;
   }
   if (boatSelected == 0) {
     return;
   }
-  if (drawnParts == 0 || isNextPart(x, y) == true) {
+
+  if (drawnParts == 0 || isNextPart(x, y)) {
     drawBoat(true, x, y);
     playerBoardElements[x][y] = ELEMENT_PARTIAL_BOAT;
-    addForbiddenElements(x,y);
+    addForbiddenDiagonals(x, y);
     drawnParts += 1;
 
     if (drawnParts == 2) {
@@ -265,25 +268,6 @@ var handleCanvasClick = function(player, e) {
     handleEnemyCanvasClick(x, y);
   }
 };
-
-var startGame = function() {
-  gameStarted = true;
-  turnOfPlayer = 1;
-};
-
-var randomMove = function() {
-  var randomX = Math.floor(Math.random()*10);
-  var randomY = Math.floor(Math.random()*10);
-  console.log("x: " + randomX + ", y: " + randomY);
-  console.log(playerBoardElements[randomX][randomY]);
-  if (playerBoardElements[randomX][randomY] == ELEMENT_BOAT) {
-    drawHitBoat(true, randomX, randomY);
-  }
-  else {
-    drawMiss(true, randomX, randomY);
-  }
-  turnOfPlayer= 1;
-}
 
 // ---------------------------
 // Initialize on window load
