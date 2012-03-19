@@ -2,7 +2,6 @@
 // Global variables
 // ------------------
 
-var GRID_SQUARES = 10;
 var ELEMENT_BOAT = "boat";
 var ELEMENT_HIT_BOAT = "hit-boat";
 var ELEMENT_PARTIAL_BOAT = "partial";
