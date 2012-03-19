@@ -18,24 +18,33 @@ var showGames = function() {
   content.load("games.html");
 };
 
+var boatTypeClicked = function(clicked, size) {
+  clicked.addClass("selected");
+  selectBoat(size, $("#sidebar-content #boat" + size + "-left"), function() {
+    clicked.removeClass("selected");
+  });
+};
+
 var showBoats = function() {
   movesLink.addClass("faded");
   gamesLink.addClass("faded");
   content.load("boats.html", function() {
     $("#sidebar-content #boat4").click(function() {
-      selectBoat(4);
+      boatTypeClicked($(this), 4);
     });
     $("#sidebar-content #boat3").click(function() {
-      selectBoat(3);
+      boatTypeClicked($(this), 3);
     });
     $("#sidebar-content #boat2").click(function() {
-      selectBoat(2);
+      boatTypeClicked($(this), 2);
     });
     $("#sidebar-content #boat1").click(function() {
-      selectBoat(1);
+      boatTypeClicked($(this), 1);
     });
     $("#sidebar-content #confirm-boats").click(function() {
-      startGame();
+      if (startGame()) {
+        showMoves();
+      }
     })
   });
 }

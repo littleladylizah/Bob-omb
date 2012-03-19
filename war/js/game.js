@@ -1,11 +1,15 @@
-// ------------------------
-// Boat positioning logic
-// ------------------------
+// ------------------
+// Global variables
+// ------------------
 
 var GRID_SQUARES = 10;
 var ELEMENT_BOAT = "boat";
+var ELEMENT_HIT_BOAT = "hit-boat";
 var ELEMENT_PARTIAL_BOAT = "partial";
 var ELEMENT_FORBIDDEN = "forbidden";
+var ELEMENT_MISS = "miss";
+var DIRECTION_H = "horizontal";
+var DIRECTION_V = "vertical";
 
 var playerBoardElements = new Array(GRID_SQUARES);
 var enemyBoardElements = new Array(GRID_SQUARES);
@@ -13,220 +17,318 @@ var boatsLeft = new Array(4);
 
 var boatSelected = 0;
 var drawnParts = 0;
+var boatCounter;
+var boatUnselectCallback;
 
 var direction;
 var turnOfPlayer;
 var gameStarted = false;
 
-for (i = 0; i < GRID_SQUARES; i++) {
-  playerBoardElements[i] = new Array(GRID_SQUARES);
-  enemyBoardElements[i] = new Array(GRID_SQUARES);
-  enemyBoardElements[i][i] = ELEMENT_BOAT;
+// -----------------------
+// Game state handling
+// -----------------------
+
+var resetGame = function() {
+  boatSelected = 0;
+  drawnParts = 0;
+  gameStarted = false;
+
+  for (i = 0; i < GRID_SQUARES; i++) {
+    playerBoardElements[i] = new Array(GRID_SQUARES);
+    enemyBoardElements[i] = new Array(GRID_SQUARES);
+    enemyBoardElements[i][i] = ELEMENT_BOAT;
+  }
+
+  for (i = 0; i < 4; i++) {
+    boatsLeft[i] = 4 - i;
+  }
+
+  resetCanvases();
+};
+
+var startGame = function() {
+  if (!boatsLeft.every(function(val) { return val == 0; })) {
+    return false;
+  }
+  removeForbidden();
+  gameStarted = true;
+  turnOfPlayer = 1;
+  return true;
+};
+
+// --------------
+// Temporary AI
+// --------------
+
+var enemyMove = function() {
+  // Select a random square the AI hasn't bombed yet
+  do {
+    var randomX = Math.floor(Math.random()*10);
+    var randomY = Math.floor(Math.random()*10);
+  } while (playerBoardElements[randomX] != null
+      && playerBoardElements[randomX][randomY] != null
+      && (playerBoardElements[randomX][randomY] == ELEMENT_MISS
+          || playerBoardElements[randomX][randomY] == ELEMENT_HIT_BOAT));
+
+  console.log("x: " + randomX + ", y: " + randomY);
+  console.log(playerBoardElements[randomX][randomY]);
+  bombPlayer(randomX, randomY);
 }
 
-for (i = 0; i < 4; i++) {
-  boatsLeft[i] = 4 - i;
-}
+// ---------------
+// Bombing logic
+// ---------------
 
-var cancelCurrentBoat = function() {
-  //TODO: vaja oleks funktsiooni ka laevade visuaalseks kustutamiseks laualt
-  for (x = 0; x < GRID_SQUARES; x++) {
-  	for (y = 0; y < GRID_SQUARES; y++)
-  	  if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
-  	  	playerBoardElements[x][y] = null;
-  	  	if (x > 0 && y > 0) {
-  	  		playerBoardElements[x - 1][y - 1] = null;
-  	  	}
-  	  	if (x > 0 && y < GRID_SQUARES - 1) {
-  	  		playerBoardElements[x - 1][y + 1] = null;
-  	  	}
-  	  	if (x < GRID_SQUARES - 1 && y > 0) {
-  	  		playerBoardElements[x + 1][y - 1] = null;
-  	  	}
-  	  	if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
-  	  		playerBoardElements[x + 1][y + 1] = null;
-  	  	}
-  	  }
+var bombPlayer = function(x, y) {
+  if (playerBoardElements[x][y] == ELEMENT_BOAT) {
+    playerBoardElements[x][y] = ELEMENT_HIT_BOAT;
+    drawEmpty(true, x, y);
+    drawHitBoat(true, x, y);
+    enemyMove();
+  } else {
+    playerBoardElements[x][y] = ELEMENT_MISS;
+    drawMiss(true, x, y);
+    turnOfPlayer = 1;
   }
 };
 
-var selectBoat = function(length) {
-  cancelCurrentBoat();
-  boatSelected = length;
+var bombEnemy = function(x, y) {
+  if (enemyBoardElements[x][y] == ELEMENT_MISS) {
+    return;
+  }
+  if (enemyBoardElements[x][y] == null) {
+    enemyBoardElements[x][y] = ELEMENT_MISS;
+    drawMiss(false, x, y);
+    turnOfPlayer = 2;
+    enemyMove();
+  } else {
+    enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
+    drawHitBoat(false, x, y);
+  }
+};
+
+// ------------------------
+// Boat positioning logic
+// ------------------------
+
+var clearSquare = function(x, y) {
+  playerBoardElements[x][y] = null;
+  drawEmpty(true, x, y);
+};
+
+var isOutOfBounds = function(x, y) {
+  return x < 0 || y < 0 || x >= GRID_SQUARES || y >= GRID_SQUARES;
+};
+
+var hasBoat = function(x, y) {
+  return !isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_BOAT;
+};
+
+var isForbidden = function(x, y) {
+  for (var i = x - 1; i <= x + 1; i++) {
+    for (var j = y - 1; j <= y + 1; j++) {
+      if (hasBoat(i, j)) {
+        return true;
+      }
+    }
+  }
+};
+
+var clearCurrentBoat = function() {
+  for (x = 0; x < GRID_SQUARES; x++) {
+    for (y = 0; y < GRID_SQUARES; y++) {
+      if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
+        clearSquare(x, y);
+        if (x > 0 && y > 0 && !isForbidden(x - 1, y - 1)) {
+          clearSquare(x - 1, y - 1);
+        }
+        if (x > 0 && y < GRID_SQUARES - 1 && !isForbidden(x - 1, y + 1)) {
+          clearSquare(x - 1, y + 1);
+        }
+        if (x < GRID_SQUARES - 1 && y > 0 && !isForbidden(x + 1, y - 1)) {
+          clearSquare(x + 1, y - 1);
+        }
+        if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1 && !isForbidden(x + 1, y + 1)) {
+          clearSquare(x + 1, y + 1);
+        }
+      }
+    }
+  }
   drawnParts = 0;
 };
 
+var selectBoat = function(length, counter, callback) {
+  clearCurrentBoat();
+  if (length != boatSelected && boatUnselectCallback != null) {
+    boatUnselectCallback();
+  }
+  boatSelected = 0;
+  boatCounter = null;
+  boatUnselectCallback = null;
+
+  if (boatsLeft[length - 1] <= 0) {
+    callback();
+    return;
+  }
+  boatCounter = counter;
+  boatSelected = length;
+  boatUnselectCallback = callback;
+};
+
 var forbidSquare = function(x, y) {
-  if (playerBoardElements[x][y] == null) {
+  if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == null) {
     drawMiss(true, x, y);
     playerBoardElements[x][y] = ELEMENT_FORBIDDEN;
   }
 };
 
-var addForbiddenElements = function(x, y) {
-	
-  if (x > 0 && y > 0) {
-    forbidSquare(x - 1, y - 1);
+var addForbiddenDiagonals = function(x, y) {
+  forbidSquare(x - 1, y - 1);
+  forbidSquare(x + 1, y - 1);
+  forbidSquare(x - 1, y + 1);
+  forbidSquare(x + 1, y + 1);
+};
+
+var addForbiddenEnds = function(x, y) {
+  if (boatSelected == 1) {
+    forbidSquare(x + 1, y);
+    forbidSquare(x, y + 1);
+    forbidSquare(x - 1, y);
+    forbidSquare(x, y - 1);
+    return;
   }
 
-  if (x < GRID_SQUARES - 1 && y > 0) {
-    forbidSquare(x + 1, y - 1);
+  if (direction == DIRECTION_H) {
+    if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x + 1, y);
+      forbidSquare(x - boatSelected, y);
+      return;
+    }
+    if (x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x - 1, y);
+      forbidSquare(x + boatSelected, y);
+      return;
+    }
   }
 
-  if (x > 0 && y < GRID_SQUARES - 1) {
-    forbidSquare(x - 1, y + 1);
-  }
-
-  if (x < GRID_SQUARES - 1 && y < GRID_SQUARES - 1) {
-    forbidSquare(x + 1, y + 1);
+  if (direction == DIRECTION_V) {
+    if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x, y + 1);
+      forbidSquare(x, y - boatSelected);
+      return;
+    }
+    if (y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
+      forbidSquare(x, y - 1);
+      forbidSquare(x, y + boatSelected);
+      return;
+    }
   }
 };
 
-var addForbiddenEnds = function(x, y, boatSelected) {
-  if (direction == "horizontal" || boatSelected == 1) {
-  	
-  	if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-  	  if (x < GRID_SQUARES - 1) {
-  	    forbidSquare(x + 1, y);
-  	  }
-  	  if (x - boatSelected >= 0) {	
-  	    forbidSquare(x - boatSelected, y);
-  	  }
-  	}
-  	
-  	else if (x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-  	  if (x > 0) {
-  	    forbidSquare(x - 1, y);
-  	  }
-  	  if (x + boatSelected < GRID_SQUARES) {
-  	  	forbidSquare(x + boatSelected, y);
-  	  }
-  	}
-  }
-  
-  if (direction == "vertical" || boatSelected == 1) {
-  	
-  	if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-  	  if (y < GRID_SQUARES - 1) {
-  	    forbidSquare(x, y + 1);
-  	  }
-  	  if (y - boatSelected >= 0) {
-  	  	forbidSquare(x, y - boatSelected);
-  	  }
-  	}
-  	
-  	else if (y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT || boatSelected == 1) {
-  	  if (y > 0) {
-  	  	forbidSquare(x, y - 1);
-  	  }
-  	  if (y + boatSelected < GRID_SQUARES) {
-  	  	forbidSquare(x, y + boatSelected);
-  	  }
-  	} 
-  }	
+var isNextHorizontal = function(x, y) {
+  return x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT
+      || x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT;
+};
+
+var isNextVertical = function(x, y) {
+  return y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT
+      || y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT;
 };
 
 var isNextPart = function(x, y) {
-  if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT ||
-  	x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT ||
-  	y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT ||
-  	y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
-  	
-  	return true;
-  	}
-  else {
-  	return false;
-  }
+  return isNextHorizontal(x, y) || isNextVertical(x, y);
 };
 
 var findDirection = function(x, y) {
-	if (x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT ||
-  		x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT) {
-  			
-  	  return "horizontal";
-  	}
-  	
-  	else if (y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT ||
-  			y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT) {
-  				
-  	  return "vertical";
-  	}
+  if (isNextHorizontal(x, y)) {
+    return DIRECTION_H;
+  } else if (isNextVertical(x, y)) {
+    return DIRECTION_V;
+  }
 };
 
 var finishBoat = function(x, y) {
-  addForbiddenEnds(x, y, boatSelected);
-	  	
-		  if (direction == "horizontal") {
-		  	for (i = 0; i < GRID_SQUARES; i++) {
-		  	  if (playerBoardElements[i][y] == ELEMENT_PARTIAL_BOAT) {
-		  	    playerBoardElements[i][y] = ELEMENT_BOAT;
-		  	  }
-		  	}
-		  }
-		  
-		  else if (direction == "vertical") {
-		  	for (i = 0; i < GRID_SQUARES; i++) {
-		  	  if (playerBoardElements[x][i] == ELEMENT_PARTIAL_BOAT) {
-		  	    playerBoardElements[x][i] = ELEMENT_BOAT;
-		  	  }
-		  	}
-		  }
-		  
-		  if (boatSelected == 1) {
-		  	playerBoardElements[x][y] = ELEMENT_BOAT;
-		  }
-	  	
-	  	boatsLeft[boatSelected - 1] -= 1;
-	  	boatSelected = 0;
-	  	drawnParts = 0;
+  addForbiddenEnds(x, y);
+
+  if (boatSelected == 1) {
+    playerBoardElements[x][y] = ELEMENT_BOAT;
+  } else if (direction == DIRECTION_H) {
+    for (i = 0; i < GRID_SQUARES; i++) {
+      if (playerBoardElements[i][y] == ELEMENT_PARTIAL_BOAT) {
+        playerBoardElements[i][y] = ELEMENT_BOAT;
+      }
+    }
+  } else if (direction == DIRECTION_V) {
+    for (i = 0; i < GRID_SQUARES; i++) {
+      if (playerBoardElements[x][i] == ELEMENT_PARTIAL_BOAT) {
+        playerBoardElements[x][i] = ELEMENT_BOAT;
+      }
+    }
+  }
+
+  boatsLeft[boatSelected - 1] -= 1;
+  boatCounter.text(boatsLeft[boatSelected - 1]);
+  drawnParts = 0;
+
+  // Unselect boat if we've run out of stock
+  if (boatsLeft[boatSelected - 1] <= 0) {
+    boatSelected = 0;
+    boatCounter = null;
+    boatUnselectCallback();
+    boatUnselectCallback = null;
+  }
 }
+
+var removeForbidden = function() {
+  for (x = 0; x < GRID_SQUARES; x++) {
+    for (y = 0; y < GRID_SQUARES; y++) {
+      if (playerBoardElements[x][y] == ELEMENT_FORBIDDEN) {
+        clearSquare(x, y);
+      }
+    }
+  }
+};
 
 // -----------------------
 // Player input handling
 // -----------------------
 
 var handlePlayerCanvasClick = function(x, y) {
-	
-	console.log("game started: " + gameStarted);
-	console.log("boat selected: " + boatSelected);
-	console.log(playerBoardElements[x][y]);
-	  
-  if (gameStarted == true) {
-  	return;
+
+  console.log("game started: " + gameStarted);
+  console.log("boat selected: " + boatSelected);
+  console.log(playerBoardElements[x][y]);
+
+  if (gameStarted) {
+    return;
   }
-  
   if (playerBoardElements[x][y] != null) {
     return;
   }
   if (boatSelected == 0) {
-  	return;
+    return;
   }
-  if (drawnParts == 0 || isNextPart(x, y) == true) {
-	  drawBoat(true, x, y);
-	  playerBoardElements[x][y] = ELEMENT_PARTIAL_BOAT;
-	  addForbiddenElements(x,y);
-	  drawnParts += 1;
-	  
-	  if (drawnParts == 2) {
-	  	direction = findDirection(x, y);
-	  }
-	  if (drawnParts == boatSelected) {
-	    finishBoat(x, y);
-	  }
+
+  if (drawnParts == 0 || isNextPart(x, y)) {
+    drawBoat(true, x, y);
+    playerBoardElements[x][y] = ELEMENT_PARTIAL_BOAT;
+    addForbiddenDiagonals(x, y);
+    drawnParts += 1;
+
+    if (drawnParts == 2) {
+      direction = findDirection(x, y);
+    }
+    if (drawnParts == boatSelected) {
+      finishBoat(x, y);
+    }
   }
 };
 
 var handleEnemyCanvasClick = function(x, y) {
   if (turnOfPlayer != 1) {
-  	return;
+    return;
   }
-  if (enemyBoardElements[x][y] == null) {
-    drawMiss(false, x, y);
-    turnOfPlayer = 2;
-    randomMove();
-  } else {
-    drawHitBoat(false, x, y);
-  }
+  bombEnemy(x, y);
 };
 
 /* function from http://stackoverflow.com/a/5417934 */
@@ -252,30 +354,12 @@ var handleCanvasClick = function(player, e) {
   }
 };
 
-var startGame = function() {
-  gameStarted = true;
-  turnOfPlayer = 1;
-};
-
-var randomMove = function() {
-  var randomX = Math.floor(Math.random()*10);
-  var randomY = Math.floor(Math.random()*10);
-  console.log("x: " + randomX + ", y: " + randomY);
-  console.log(playerBoardElements[randomX][randomY]);
-  if (playerBoardElements[randomX][randomY] == ELEMENT_BOAT) {
-  	drawHitBoat(true, randomX, randomY);
-  }
-  else {
-  	drawMiss(true, randomX, randomY);
-  }
-  turnOfPlayer= 1;
-}
-
 // ---------------------------
 // Initialize on window load
 // ---------------------------
 
 $(window).load(function() {
+  resetGame();
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });
