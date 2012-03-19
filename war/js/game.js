@@ -22,6 +22,7 @@ var boatUnselectCallback;
 var direction;
 var turnOfPlayer;
 var gameStarted = false;
+var positioning = false;
 
 // -----------------------
 // Game state handling
@@ -31,6 +32,7 @@ var resetGame = function() {
   boatSelected = 0;
   drawnParts = 0;
   gameStarted = false;
+  positioning = false;
 
   for (i = 0; i < GRID_SQUARES; i++) {
     playerBoardElements[i] = new Array(GRID_SQUARES);
@@ -45,12 +47,17 @@ var resetGame = function() {
   resetCanvases();
 };
 
+var startPositioning = function() {
+  positioning = true;
+};
+
 var startGame = function() {
   if (!boatsLeft.every(function(val) { return val == 0; })) {
     return false;
   }
   removeForbidden();
   gameStarted = true;
+  positioning = false;
   turnOfPlayer = 1;
   return true;
 };
@@ -359,6 +366,7 @@ var handleCanvasClick = function(player, e) {
 
 $(window).load(function() {
   resetGame();
+  startPositioning();
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });
