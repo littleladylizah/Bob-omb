@@ -98,3 +98,17 @@
   color: #609000;
   outline: 1px solid #609000;
 }
+
+#sidebar-content #delete-boats {
+  display: block;
+  margin: 0em auto;
+  font-size: 2.4em;
+  text-align: center;
+  padding: 0.5em;
+  color: #c0c078;
+}
+
+#sidebar-content #delete-boats:hover {
+  color: #609000;
+  outline: 1px solid #609000;
+}
