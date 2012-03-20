@@ -336,36 +336,36 @@ var removeForbidden = function() {
 
 var deleteBoat = function(x, y) {
   if (playerBoardElements[x][y] == ELEMENT_BOAT) {
-  	direction = findDirection(x, y);
-  	console.log("x=" + x + " y=" + y);
-  	if (direction == DIRECTION_H) {
-  	  for (i = x; i < GRID_SQUARES && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i++) {
-  	  	clearSquare(i, y);
-  	  	clearForbiddenDiagonals(i, y);
-  	  	clearForbiddenSides(i, y);
-  	  }
-  	  for (i = x; i > 0 && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i--) {
-  	  	clearSquare(i, y);
-  	  	clearForbiddenDiagonals(i, y);
-  	  	clearForbiddenSides(i, y);
-  	  }
-  	}
-  	else if (direction == DIRECTION_V) {
-  	  for (i = y; i < GRID_SQUARES && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i++) {
-  	  	clearSquare(x, i);
-  	  	clearForbiddenDiagonals(x, i);
-  	  	clearForbiddenSides(x, i);
-  	  }
-  	  for (i = y; i > 0 && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i--) {
-  	  	clearSquare(x, i);
-  	  	clearForbiddenDiagonals(x, i);
-  	  	clearForbiddenSides(x, i);
-  	  }
-  	}
-  	else {
-  	  clearSquare(x, y);
-  	  clearForbiddenDiagonals(x, y);
-  	  clearForbiddenSides(x, y);
+    direction = findDirection(x, y);
+    console.log("x=" + x + " y=" + y);
+    if (direction == DIRECTION_H) {
+      for (i = x; i < GRID_SQUARES && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i++) {
+        clearSquare(i, y);
+        clearForbiddenDiagonals(i, y);
+        clearForbiddenSides(i, y);
+      }
+      for (i = x; i > 0 && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i--) {
+        clearSquare(i, y);
+        clearForbiddenDiagonals(i, y);
+        clearForbiddenSides(i, y);
+      }
+    }
+    else if (direction == DIRECTION_V) {
+      for (i = y; i < GRID_SQUARES && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i++) {
+        clearSquare(x, i);
+        clearForbiddenDiagonals(x, i);
+        clearForbiddenSides(x, i);
+      }
+      for (i = y; i > 0 && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i--) {
+        clearSquare(x, i);
+        clearForbiddenDiagonals(x, i);
+        clearForbiddenSides(x, i);
+      }
+    }
+    else {
+      clearSquare(x, y);
+      clearForbiddenDiagonals(x, y);
+      clearForbiddenSides(x, y);
 }
   }
 }
@@ -438,7 +438,7 @@ var handleDeleteBoat = function(e) {
     return;
   }
   else {
-  	deleteBoat(x, y);
+    deleteBoat(x, y);
   }
 }
 
