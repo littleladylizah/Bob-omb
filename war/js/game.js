@@ -145,7 +145,7 @@ var isForbidden = function(x, y) {
 var clearCurrentBoat = function() {
   for (x = 0; x < GRID_SQUARES; x++) {
     for (y = 0; y < GRID_SQUARES; y++) {
-      if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
+      if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) { // TODO isOutOfBounds?
         clearSquare(x, y);
         if (!isForbidden(x - 1, y - 1)) {
           clearSquare(x - 1, y - 1);
@@ -203,26 +203,6 @@ var addForbiddenDiagonals = function(x, y) {
   forbidSquare(x + 1, y + 1);
 };
 
-var clearForbiddenDiagonals = function(x, y) {
-  clearForbiddenSquare(x - 1, y - 1);
-  clearForbiddenSquare(x + 1, y - 1);
-  clearForbiddenSquare(x - 1, y + 1);
-  clearForbiddenSquare(x + 1, y + 1);
-};
-
-var clearForbiddenSides = function(x, y) {
-  clearForbiddenSquare(x - 1, y);
-  clearForbiddenSquare(x + 1, y);
-  clearForbiddenSquare(x, y + 1);
-  clearForbiddenSquare(x, y - 1);
-};
-
-var clearForbiddenSquare = function(x, y) {
-  if (!isOutOfBounds(x, y) && !isNextPart(x, y) && !isNextDiagonal(x, y)) {
-    clearSquare(x, y);
-  }
-}
-
 var addForbiddenEnds = function(x, y) {
   if (boatSelected == 1) {
     forbidSquare(x + 1, y);
@@ -257,6 +237,26 @@ var addForbiddenEnds = function(x, y) {
       return;
     }
   }
+};
+
+var clearForbiddenSquare = function(x, y) {
+  if (!isOutOfBounds(x, y) && !isNextPart(x, y) && !isNextDiagonal(x, y)) {
+    clearSquare(x, y);
+  }
+}
+
+var clearForbiddenDiagonals = function(x, y) {
+  clearForbiddenSquare(x - 1, y - 1);
+  clearForbiddenSquare(x + 1, y - 1);
+  clearForbiddenSquare(x - 1, y + 1);
+  clearForbiddenSquare(x + 1, y + 1);
+};
+
+var clearForbiddenSides = function(x, y) {
+  clearForbiddenSquare(x - 1, y);
+  clearForbiddenSquare(x + 1, y);
+  clearForbiddenSquare(x, y + 1);
+  clearForbiddenSquare(x, y - 1);
 };
 
 var isNextHorizontal = function(x, y) {
