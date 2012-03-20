@@ -13,7 +13,6 @@ var DIRECTION_V = "vertical";
 var playerBoardElements = new Array(GRID_SQUARES);
 var enemyBoardElements = new Array(GRID_SQUARES);
 var boatsLeft = new Array(4);
-var hoverSquare = new Array(2);
 
 var boatSelected = 0;
 var drawnParts = 0;
@@ -103,11 +102,23 @@ var enemyMove = function() {
 // Bombing logic
 // ---------------
 
+var hitSquare = function(board, x, y) {
+  var squares = getBoatSquares(board, x, y);
+  if (squares.every(function(coords) {
+        return board[coords[0]][coords[1]] == ELEMENT_HIT_BOAT;
+      })) {
+    squares.forEach(function(coords) {
+      drawSunken(board == playerBoardElements, coords[0], coords[1]);
+    });
+  }
+};
+
 var bombPlayer = function(x, y) {
   if (playerBoardElements[x][y] == ELEMENT_BOAT) {
     playerBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawEmpty(true, x, y);
     drawHitBoat(true, x, y);
+    hitSquare(playerBoardElements, x, y);
     enemyMove();
   } else {
     playerBoardElements[x][y] = ELEMENT_MISS;
@@ -128,6 +139,7 @@ var bombEnemy = function(x, y) {
   } else {
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawHitBoat(false, x, y);
+    hitSquare(enemyBoardElements, x, y);
   }
 };
 
@@ -144,8 +156,8 @@ var getBoatSquares = function(board, x, y, elements) {
     return [];
   }
 
-  var getNewAdjacent = function(x, y, prev) {
-    return getAdjacent(x, y).filter(function(coords) {
+  var getNewSides = function(x, y, prev) {
+    return getSides(x, y).filter(function(coords) {
       return elements.indexOf(board[coords[0]][coords[1]]) >= 0
           && (coords[0] != prev[0] || coords[1] != prev[1]);
     });
@@ -153,7 +165,7 @@ var getBoatSquares = function(board, x, y, elements) {
 
   var findConnected = function(squares, coords, prev) {
     squares.push(coords);
-    getNewAdjacent(coords[0], coords[1], prev).forEach(function(child) {
+    getNewSides(coords[0], coords[1], prev).forEach(function(child) {
       findConnected(squares, child, coords);
     });
     return squares;
@@ -426,21 +438,6 @@ var handleCanvasClick = function(player, e) {
   }
 };
 
-var handleCanvasHover = function(e) {
-  if (hoverSquare[0] && hoverSquare[1]) {
-    removeHover();
-  }
-  hoverSquare[0] = e.pageX;
-  hoverSquare[1] = e.pageY;
-  console.log(hoverSquare);
-  drawHover(false, hoverSquare[0], hoverSquare[1]);
-}
-
-var removeHover = function() {
-  clearHover(false, hoverSquare[0], hoverSquare[1]);
-  hoverSquare[0] = null;
-  hoverSquare[1] = null;    
-}
 // ---------------------------
 // Initialize on window load
 // ---------------------------
@@ -454,12 +451,4 @@ $(window).load(function() {
   gEnemyCanvas.click(function(e) {
     handleCanvasClick(false, e);
   });
-  gEnemyCanvas.hover(
-    function(e) {
-      handleCanvasHover(false, e);
-    },
-    function() {
-      removeHover();
-    }
-  );
 });

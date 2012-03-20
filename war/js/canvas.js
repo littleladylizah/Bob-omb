@@ -71,6 +71,9 @@ boatRight.src = "img/boat-right.png";
 var boatRightHit = new Image();
 boatRightHit.src = "img/boat-right-hit.png";
 
+var sunken = new Image();
+sunken.src = "img/cross-hit.png";
+
 // -------------------
 // Utility functions
 // -------------------
@@ -166,8 +169,25 @@ var drawEmpty = function(player, x, y) {
 var drawImage = function(image, player, x, y) {
   doOnCanvas(player, function(ctx) {
     ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
-    ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
   });
+
+  var intervalID;
+  var frame = 0;
+  var drawFrame = function(image) {
+    if (++frame > 10) {
+      clearInterval(intervalID);
+      return;
+    }
+    doOnCanvas(player, function(ctx) {
+      ctx.translate(SQUARE_SIZE * x, SQUARE_SIZE * y);
+      //ctx.clearRect(0, 0, SQUARE_SIZE, SQUARE_SIZE); // may be needed in the future
+      ctx.translate(SQUARE_SIZE / 2, SQUARE_SIZE / 2);
+      ctx.scale(frame / 10, frame / 10);
+      ctx.drawImage(image, SQUARE_SIZE / -2, SQUARE_SIZE / -2);
+    });
+  };
+
+  intervalID = setInterval(drawFrame, 50, image);
 };
 
 var drawBoatPiece = function(player, x, y, piece, hit) {
@@ -230,18 +250,9 @@ var drawMiss = function(player, x, y) {
   drawImage(miss, player, x, y);
 };
 
-var drawHover = function(player, x, y) {
-  doOnCanvas(player, function(ctx) {
-    ctx.fillStyle = "#d8d8a8";
-    ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
-  })
-}
-
-var clearHover = function(player, x, y) {
-  doOnCanvas(player, function(ctx) {
-    ctx.clearRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
-  });
-}
+var drawSunken= function(player, x, y) {
+  drawImage(sunken, player, x, y);
+};
 
 // ---------------------------
 // Initialize on window load
