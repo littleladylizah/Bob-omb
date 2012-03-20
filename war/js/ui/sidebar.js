@@ -7,12 +7,18 @@ var container;
 var content;
 
 var showMoves = function() {
+  if (positioning) {
+    return;
+  }
   movesLink.removeClass("faded");
   gamesLink.addClass("faded");
   content.load("moves.html");
 };
 
 var showGames = function() {
+  if (positioning) {
+    return;
+  }
   gamesLink.removeClass("faded");
   movesLink.addClass("faded");
   content.load("games.html");
