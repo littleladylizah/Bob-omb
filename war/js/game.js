@@ -135,14 +135,17 @@ var bombEnemy = function(x, y) {
 // ------------------------
 
 // Returns all the coordinates of the target boat
-var getBoatSquares = function(board, x, y) {
-  if (board[x][y] != ELEMENT_BOAT) {
+var getBoatSquares = function(board, x, y, elements) {
+  if (!elements) {
+    elements = [ELEMENT_BOAT, ELEMENT_HIT_BOAT];
+  }
+  if (elements.indexOf(board[x][y]) < 0) {
     return [];
   }
 
   var getNewAdjacent = function(x, y, prev) {
     return getAdjacent(x, y).filter(function(coords) {
-      return board[coords[0]][coords[1]] == ELEMENT_BOAT
+      return elements.indexOf(board[coords[0]][coords[1]]) >= 0
           && (coords[0] != prev[0] || coords[1] != prev[1]);
     });
   };
