@@ -22,6 +22,7 @@ var boatCountCallbacks = [];
 
 var direction;
 var turnOfPlayer;
+var turnChangeCallbacks = [];
 
 var gameStarted = false;
 var deleteMode = false;
@@ -61,8 +62,19 @@ var startGame = function() {
   removeForbidden();
   gameStarted = true;
   positioning = false;
-  turnOfPlayer = 1;
+  setTurnOfPlayer(1);
   return true;
+};
+
+var registerTurnChangeListener = function(callback) {
+  turnChangeCallbacks.push(callback);
+};
+
+var setTurnOfPlayer = function(player) {
+  turnOfPlayer = player;
+  turnChangeCallbacks.forEach(function(callback) {
+    callback(player);
+  });
 };
 
 // --------------
@@ -81,7 +93,7 @@ var enemyMove = function() {
 
   console.log("x: " + randomX + ", y: " + randomY);
   console.log(playerBoardElements[randomX][randomY]);
-  bombPlayer(randomX, randomY);
+  window.setTimeout(bombPlayer, 500, randomX, randomY);
 }
 
 // ---------------
@@ -97,7 +109,7 @@ var bombPlayer = function(x, y) {
   } else {
     playerBoardElements[x][y] = ELEMENT_MISS;
     drawMiss(true, x, y);
-    turnOfPlayer = 1;
+    setTurnOfPlayer(1);
   }
 };
 
@@ -108,7 +120,7 @@ var bombEnemy = function(x, y) {
   if (enemyBoardElements[x][y] == null) {
     enemyBoardElements[x][y] = ELEMENT_MISS;
     drawMiss(false, x, y);
-    turnOfPlayer = 2;
+    setTurnOfPlayer(2);
     enemyMove();
   } else {
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;

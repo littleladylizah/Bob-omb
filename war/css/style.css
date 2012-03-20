@@ -39,6 +39,10 @@ a {
   margin-right: 0.6em;
 }
 
+.player-turn {
+  text-decoration: underline;
+}
+
 #player-canvas {
   float: left;
   margin: 20px;
