@@ -156,8 +156,8 @@ var getBoatSquares = function(board, x, y, elements) {
     return [];
   }
 
-  var getNewAdjacent = function(x, y, prev) {
-    return getAdjacent(x, y).filter(function(coords) {
+  var getNewSides = function(x, y, prev) {
+    return getSides(x, y).filter(function(coords) {
       return elements.indexOf(board[coords[0]][coords[1]]) >= 0
           && (coords[0] != prev[0] || coords[1] != prev[1]);
     });
@@ -165,7 +165,7 @@ var getBoatSquares = function(board, x, y, elements) {
 
   var findConnected = function(squares, coords, prev) {
     squares.push(coords);
-    getNewAdjacent(coords[0], coords[1], prev).forEach(function(child) {
+    getNewSides(coords[0], coords[1], prev).forEach(function(child) {
       findConnected(squares, child, coords);
     });
     return squares;
