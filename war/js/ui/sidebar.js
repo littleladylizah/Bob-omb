@@ -26,20 +26,11 @@ var showGames = function() {
 
 var boatTypeClicked = function(clicked, size) {
   clicked.addClass("selected");
-  $(document.getElementById("delete-boats")).removeClass("selected");
+  $("#sidebar-content #delete-boats").removeClass("selected");
   selectBoat(size, $("#sidebar-content #boat" + size + "-left"), function() {
     clicked.removeClass("selected");
   });
 };
-
-var deleteButtonClicked = function(clicked) {
-  clicked.addClass("selected");
-  var elements = document.getElementsByClassName("selected");
-  for (i = 0; i < elements.length - 1; i++) {
-    $(elements[i]).removeClass("selected");
-  }
-  setDeleteMode();
-}
 
 var showBoats = function() {
   movesLink.addClass("faded");
@@ -57,16 +48,18 @@ var showBoats = function() {
     $("#sidebar-content #boat1").click(function() {
       boatTypeClicked($(this), 1);
     });
+    $("#sidebar-content #delete-boats").click(function() {
+      $("#sidebar-content .selected").removeClass("selected");
+      $(this).addClass("selected");
+      setDeleteMode();
+    });
     $("#sidebar-content #confirm-boats").click(function() {
       if (startGame()) {
         showMoves();
       }
     });
-    $("#sidebar-content #delete-boats").click(function() {
-      deleteButtonClicked($(this));
-    });
   });
-}
+};
 
 $(window).load(function() {
   // Select the needed elements

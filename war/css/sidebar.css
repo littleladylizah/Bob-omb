@@ -85,7 +85,7 @@
   outline: 1px solid #609000;
 }
 
-#sidebar-content #confirm-boats {
+#sidebar-content .button {
   display: block;
   margin: 0em auto;
   font-size: 2.4em;
@@ -94,21 +94,7 @@
   color: #c0c078;
 }
 
-#sidebar-content #confirm-boats:hover {
-  color: #609000;
-  outline: 1px solid #609000;
-}
-
-#sidebar-content #delete-boats {
-  display: block;
-  margin: 0em auto;
-  font-size: 2.4em;
-  text-align: center;
-  padding: 0.5em;
-  color: #c0c078;
-}
-
-#sidebar-content #delete-boats:hover {
+#sidebar-content .button:hover {
   color: #609000;
   outline: 1px solid #609000;
 }
