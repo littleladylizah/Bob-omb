@@ -13,6 +13,7 @@ var DIRECTION_V = "vertical";
 var playerBoardElements = new Array(GRID_SQUARES);
 var enemyBoardElements = new Array(GRID_SQUARES);
 var boatsLeft = new Array(4);
+var hoverSquare = new Array(2);
 
 var boatSelected = 0;
 var drawnParts = 0;
@@ -408,7 +409,6 @@ var getMousePosition = function(e) {
   var canoff = $(e.target).offset();
   var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoff.left);
   var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoff.top) + 1;
-
   return [x, y];
 };
 
@@ -426,6 +426,21 @@ var handleCanvasClick = function(player, e) {
   }
 };
 
+var handleCanvasHover = function(e) {
+  if (hoverSquare[0] && hoverSquare[1]) {
+    removeHover();
+  }
+  hoverSquare[0] = e.pageX;
+  hoverSquare[1] = e.pageY;
+  console.log(hoverSquare);
+  drawHover(false, hoverSquare[0], hoverSquare[1]);
+}
+
+var removeHover = function() {
+  clearHover(false, hoverSquare[0], hoverSquare[1]);
+  hoverSquare[0] = null;
+  hoverSquare[1] = null;    
+}
 // ---------------------------
 // Initialize on window load
 // ---------------------------
@@ -439,4 +454,12 @@ $(window).load(function() {
   gEnemyCanvas.click(function(e) {
     handleCanvasClick(false, e);
   });
+  gEnemyCanvas.hover(
+    function(e) {
+      handleCanvasHover(false, e);
+    },
+    function() {
+      removeHover();
+    }
+  );
 });

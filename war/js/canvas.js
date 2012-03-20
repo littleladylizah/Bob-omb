@@ -230,6 +230,19 @@ var drawMiss = function(player, x, y) {
   drawImage(miss, player, x, y);
 };
 
+var drawHover = function(player, x, y) {
+  doOnCanvas(player, function(ctx) {
+    ctx.fillStyle = "#d8d8a8";
+    ctx.fillRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+  })
+}
+
+var clearHover = function(player, x, y) {
+  doOnCanvas(player, function(ctx) {
+    ctx.clearRect(x, y, SQUARE_SIZE, SQUARE_SIZE);
+  });
+}
+
 // ---------------------------
 // Initialize on window load
 // ---------------------------
