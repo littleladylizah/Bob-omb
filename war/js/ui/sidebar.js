@@ -24,30 +24,28 @@ var showGames = function() {
   content.load("games.html");
 };
 
-var boatTypeClicked = function(clicked, size) {
-  clicked.addClass("selected");
-  $("#sidebar-content #delete-boats").removeClass("selected");
-  selectBoat(size, $("#sidebar-content #boat" + size + "-left"), function() {
-    clicked.removeClass("selected");
-  });
-};
-
 var showBoats = function() {
   movesLink.addClass("faded");
   gamesLink.addClass("faded");
   content.load("boats.html", function() {
-    $("#sidebar-content #boat4").click(function() {
-      boatTypeClicked($(this), 4);
-    });
-    $("#sidebar-content #boat3").click(function() {
-      boatTypeClicked($(this), 3);
-    });
-    $("#sidebar-content #boat2").click(function() {
-      boatTypeClicked($(this), 2);
-    });
-    $("#sidebar-content #boat1").click(function() {
-      boatTypeClicked($(this), 1);
-    });
+    clearBoatCountListeners();
+    for (var i = 1; i < 5; i++) {
+      (function() {
+        var size = i; // necessary for the closure
+        $("#sidebar-content #boat" + size).click(function() {
+          var clicked = $(this);
+          clicked.addClass("selected");
+          $("#sidebar-content #delete-boats").removeClass("selected");
+          selectBoat(size, $("#sidebar-content #boat" + size + "-left"), function() {
+            clicked.removeClass("selected");
+          });
+        });
+        registerBoatCountListener(size, function(count) {
+          $("#sidebar-content #boat" + size + "-left").text(count);
+        });
+      })();
+    }
+
     $("#sidebar-content #delete-boats").click(function() {
       $("#sidebar-content .selected").removeClass("selected");
       $(this).addClass("selected");

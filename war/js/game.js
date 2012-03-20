@@ -18,6 +18,7 @@ var boatSelected = 0;
 var drawnParts = 0;
 var boatCounter;
 var boatUnselectCallback;
+var boatCountCallbacks = [];
 
 var direction;
 var turnOfPlayer;
@@ -116,78 +117,72 @@ var bombEnemy = function(x, y) {
 };
 
 // ------------------------
+// Boat utility functions
+// ------------------------
+
+// Returns all the coordinates of the target boat
+var getBoatSquares = function(board, x, y) {
+  if (board[x][y] != ELEMENT_BOAT) {
+    return [];
+  }
+
+  var getNewAdjacent = function(x, y, prev) {
+    return getAdjacent(x, y).filter(function(coords) {
+      return board[coords[0]][coords[1]] == ELEMENT_BOAT
+          && (coords[0] != prev[0] || coords[1] != prev[1]);
+    });
+  };
+
+  var findConnected = function(squares, coords, prev) {
+    squares.push(coords);
+    getNewAdjacent(coords[0], coords[1], prev).forEach(function(child) {
+      findConnected(squares, child, coords);
+    });
+    return squares;
+  };
+
+  return findConnected([], [x, y], [null, null]);
+};
+
+// ------------------------
 // Boat positioning logic
 // ------------------------
+
+var clearBoatCountListeners = function() {
+  boatCountCallbacks = [];
+};
+
+var registerBoatCountListener = function(size, listener) {
+  boatCountCallbacks.push([size, listener]);
+};
+
+var setBoatsLeft = function(size, left) {
+  boatsLeft[size - 1] = left;
+  boatCountCallbacks.forEach(function(pair) {
+    if (pair[0] == size) {
+      pair[1](left);
+    }
+  });
+};
+
+var increaseBoatsLeft = function(size) {
+  setBoatsLeft(size, boatsLeft[size - 1] + 1);
+};
+
+var decreaseBoatsLeft = function(size) {
+  setBoatsLeft(size, boatsLeft[size - 1] - 1);
+};
+
+var isForbidden = function(x, y) {
+  return getAdjacent(x, y).some(function(coords) {
+    return playerBoardElements[coords[0]][coords[1]] == ELEMENT_BOAT;
+  });
+};
 
 var clearSquare = function(x, y) {
   playerBoardElements[x][y] = null;
   drawEmpty(true, x, y);
 };
-
-var isOutOfBounds = function(x, y) {
-  return x < 0 || y < 0 || x >= GRID_SQUARES || y >= GRID_SQUARES;
-};
-
-var hasBoat = function(x, y) {
-  return !isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_BOAT;
-};
-
-var isForbidden = function(x, y) {
-  for (var i = x - 1; i <= x + 1; i++) {
-    for (var j = y - 1; j <= y + 1; j++) {
-      if (hasBoat(i, j)) {
-        return true;
-      }
-    }
-  }
-};
-
-var clearCurrentBoat = function() {
-  for (x = 0; x < GRID_SQUARES; x++) {
-    for (y = 0; y < GRID_SQUARES; y++) {
-      if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) { // TODO isOutOfBounds?
-        clearSquare(x, y);
-        if (!isForbidden(x - 1, y - 1)) {
-          clearSquare(x - 1, y - 1);
-        }
-        if (!isForbidden(x - 1, y + 1)) {
-          clearSquare(x - 1, y + 1);
-        }
-        if (!isForbidden(x + 1, y - 1)) {
-          clearSquare(x + 1, y - 1);
-        }
-        if (!isForbidden(x + 1, y + 1)) {
-          clearSquare(x + 1, y + 1);
-        }
-      }
-    }
-  }
-  drawnParts = 0;
-};
-
-var selectBoat = function(length, counter, callback) {
-  deleteMode = false;
-  clearCurrentBoat();
-  if (length != boatSelected && boatUnselectCallback != null) {
-    boatUnselectCallback();
-  }
-  boatSelected = 0;
-  boatCounter = null;
-  boatUnselectCallback = null;
-
-  if (boatsLeft[length - 1] <= 0) {
-    callback();
-    return;
-  }
-  boatCounter = counter;
-  boatSelected = length;
-  boatUnselectCallback = callback;
-};
-
-var setDeleteMode = function() {
-  deleteMode = true;
-  clearCurrentBoat();
-}
 
 var forbidSquare = function(x, y) {
   if (!isOutOfBounds(x, y) && playerBoardElements[x][y] == null) {
@@ -196,19 +191,19 @@ var forbidSquare = function(x, y) {
   }
 };
 
+var clearForbiddenSquare = function(x, y) {
+  if (!isForbidden(x, y)) {
+    clearSquare(x, y);
+  }
+}
+
 var addForbiddenDiagonals = function(x, y) {
-  forbidSquare(x - 1, y - 1);
-  forbidSquare(x + 1, y - 1);
-  forbidSquare(x - 1, y + 1);
-  forbidSquare(x + 1, y + 1);
+  doForDiagonals(x, y, forbidSquare);
 };
 
 var addForbiddenEnds = function(x, y) {
   if (boatSelected == 1) {
-    forbidSquare(x + 1, y);
-    forbidSquare(x, y + 1);
-    forbidSquare(x - 1, y);
-    forbidSquare(x, y - 1);
+    doForSides(x, y, forbidSquare);
     return;
   }
 
@@ -239,50 +234,27 @@ var addForbiddenEnds = function(x, y) {
   }
 };
 
-var clearForbiddenSquare = function(x, y) {
-  if (!isOutOfBounds(x, y) && !isNextPart(x, y) && !isNextDiagonal(x, y)) {
-    clearSquare(x, y);
-  }
-}
-
-var clearForbiddenDiagonals = function(x, y) {
-  clearForbiddenSquare(x - 1, y - 1);
-  clearForbiddenSquare(x + 1, y - 1);
-  clearForbiddenSquare(x - 1, y + 1);
-  clearForbiddenSquare(x + 1, y + 1);
-};
-
-var clearForbiddenSides = function(x, y) {
-  clearForbiddenSquare(x - 1, y);
-  clearForbiddenSquare(x + 1, y);
-  clearForbiddenSquare(x, y + 1);
-  clearForbiddenSquare(x, y - 1);
+var removeForbidden = function() {
+  doForAll(function(x, y) {
+    if (playerBoardElements[x][y] == ELEMENT_FORBIDDEN) {
+      clearSquare(x, y);
+    }
+  });
 };
 
 var isNextHorizontal = function(x, y) {
   return x > 0 && playerBoardElements[x - 1][y] == ELEMENT_PARTIAL_BOAT
-      || x > 0 && playerBoardElements[x - 1][y] ==  ELEMENT_BOAT
       || x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] == ELEMENT_PARTIAL_BOAT
-      || x < GRID_SQUARES - 1 && playerBoardElements[x + 1][y] ==  ELEMENT_BOAT;
 };
 
 var isNextVertical = function(x, y) {
   return y > 0 && playerBoardElements[x][y - 1] == ELEMENT_PARTIAL_BOAT
-      || y > 0 && playerBoardElements[x][y - 1] ==  ELEMENT_BOAT
       || y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] == ELEMENT_PARTIAL_BOAT
-      || y < GRID_SQUARES - 1 && playerBoardElements[x][y + 1] ==  ELEMENT_BOAT;
 };
 
 var isNextPart = function(x, y) {
   return isNextHorizontal(x, y) || isNextVertical(x, y);
 };
-
-var isNextDiagonal = function(x, y) {
-  return !isOutOfBounds(x - 1, y - 1) && playerBoardElements[x - 1][y - 1] == ELEMENT_BOAT
-      || !isOutOfBounds(x + 1, y - 1) && playerBoardElements[x + 1][y - 1] == ELEMENT_BOAT
-      || !isOutOfBounds(x - 1, y + 1) && playerBoardElements[x - 1][y + 1] == ELEMENT_BOAT
-      || !isOutOfBounds(x + 1, y + 1) && playerBoardElements[x + 1][y + 1] == ELEMENT_BOAT;
-}
 
 var findDirection = function(x, y) {
   if (isNextHorizontal(x, y)) {
@@ -291,6 +263,51 @@ var findDirection = function(x, y) {
     return DIRECTION_V;
   }
 };
+
+var clearCurrentBoat = function() {
+  doForAll(function(x, y) {
+    if (playerBoardElements[x][y] == ELEMENT_PARTIAL_BOAT) {
+      clearSquare(x, y);
+      doForDiagonals(x, y, clearForbiddenSquare);
+    }
+  });
+  drawnParts = 0;
+};
+
+var selectBoat = function(length, counter, callback) {
+  deleteMode = false;
+  clearCurrentBoat();
+  if (length != boatSelected && boatUnselectCallback != null) {
+    boatUnselectCallback();
+  }
+  boatSelected = 0;
+  boatCounter = null;
+  boatUnselectCallback = null;
+
+  if (boatsLeft[length - 1] <= 0) {
+    callback();
+    return;
+  }
+  boatCounter = counter;
+  boatSelected = length;
+  boatUnselectCallback = callback;
+};
+
+var setDeleteMode = function() {
+  deleteMode = true;
+  clearCurrentBoat();
+}
+
+var deleteBoat = function(x, y) {
+  var squares = getBoatSquares(playerBoardElements, x, y);
+  if (squares.length > 0) {
+    squares.forEach(function(coords) {
+      clearSquare(coords[0], coords[1]);
+      doForAdjacent(coords[0], coords[1], clearForbiddenSquare);
+    });
+    increaseBoatsLeft(squares.length);
+  }
+}
 
 var finishBoat = function(x, y) {
   addForbiddenEnds(x, y);
@@ -311,8 +328,7 @@ var finishBoat = function(x, y) {
     }
   }
 
-  boatsLeft[boatSelected - 1] -= 1;
-  boatCounter.text(boatsLeft[boatSelected - 1]);
+  decreaseBoatsLeft(boatSelected);
   drawnParts = 0;
 
   // Unselect boat if we've run out of stock
@@ -324,61 +340,8 @@ var finishBoat = function(x, y) {
   }
 }
 
-var removeForbidden = function() {
-  for (x = 0; x < GRID_SQUARES; x++) {
-    for (y = 0; y < GRID_SQUARES; y++) {
-      if (playerBoardElements[x][y] == ELEMENT_FORBIDDEN) {
-        clearSquare(x, y);
-      }
-    }
-  }
-};
-
-var deleteBoat = function(x, y) {
-  if (playerBoardElements[x][y] == ELEMENT_BOAT) {
-    direction = findDirection(x, y);
-    console.log("x=" + x + " y=" + y);
-    if (direction == DIRECTION_H) {
-      for (i = x; i < GRID_SQUARES && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i++) {
-        clearSquare(i, y);
-        clearForbiddenDiagonals(i, y);
-        clearForbiddenSides(i, y);
-      }
-      for (i = x; i > 0 && playerBoardElements[i][y] != ELEMENT_FORBIDDEN; i--) {
-        clearSquare(i, y);
-        clearForbiddenDiagonals(i, y);
-        clearForbiddenSides(i, y);
-      }
-    }
-    else if (direction == DIRECTION_V) {
-      for (i = y; i < GRID_SQUARES && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i++) {
-        clearSquare(x, i);
-        clearForbiddenDiagonals(x, i);
-        clearForbiddenSides(x, i);
-      }
-      for (i = y; i > 0 && playerBoardElements[x][i] != ELEMENT_FORBIDDEN; i--) {
-        clearSquare(x, i);
-        clearForbiddenDiagonals(x, i);
-        clearForbiddenSides(x, i);
-      }
-    }
-    else {
-      clearSquare(x, y);
-      clearForbiddenDiagonals(x, y);
-      clearForbiddenSides(x, y);
-}
-  }
-}
-
-// -----------------------
-// Player input handling
-// -----------------------
-
-var handlePlayerCanvasClick = function(x, y) {
-
-  console.log(playerBoardElements[x][y]);
-
-  if (gameStarted || deleteMode || playerBoardElements[x][y] != null || boatSelected == 0) {
+var putBoat = function(x, y) {
+  if (playerBoardElements[x][y] != null || boatSelected == 0) {
     return;
   }
 
@@ -394,6 +357,25 @@ var handlePlayerCanvasClick = function(x, y) {
     if (drawnParts == boatSelected) {
       finishBoat(x, y);
     }
+  }
+};
+
+// -----------------------
+// Player input handling
+// -----------------------
+
+var handlePlayerCanvasClick = function(x, y) {
+
+  console.log(playerBoardElements[x][y]);
+
+  if (gameStarted) {
+    return;
+  }
+
+  if (deleteMode) {
+    deleteBoat(x, y);
+  } else {
+    putBoat(x, y);
   }
 };
 
@@ -427,21 +409,6 @@ var handleCanvasClick = function(player, e) {
   }
 };
 
-var handleDeleteBoat = function(e) {
-  if (!deleteMode) {
-    return;
-  }
-  var pos = getMousePosition(e);
-  var x = Math.floor((pos[0] - PLAYER_OFF_X) / SQUARE_SIZE);
-  var y = Math.floor((pos[1] - PLAYER_OFF_Y) / SQUARE_SIZE);
-  if (x < 0 || x > GRID_SQUARES - 1 || y < 0 || y > GRID_SQUARES - 1) {
-    return;
-  }
-  else {
-    deleteBoat(x, y);
-  }
-}
-
 // ---------------------------
 // Initialize on window load
 // ---------------------------
@@ -454,8 +421,5 @@ $(window).load(function() {
   });
   gEnemyCanvas.click(function(e) {
     handleCanvasClick(false, e);
-  });
-  gPlayerCanvas.click(function(e) {
-    handleDeleteBoat(e);
   });
 });

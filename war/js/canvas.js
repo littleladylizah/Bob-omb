@@ -2,7 +2,6 @@
 // Global variables and constants also used in input.js
 // ------------------------------------------------------
 
-var GRID_SQUARES = 10;
 var SQUARE_SIZE = 40;
 var PLAYER_OFF_X = 20;
 var PLAYER_OFF_Y = 0;
@@ -217,10 +216,9 @@ var drawBoat = function(player, x, y, hit, redrawing) {
   hit = Boolean(hit); // set hit to false if it was undefined
   drawBoatPiece(player, x, y, piece, hit);
   if (!redrawing) {
-    redrawSquare(player, x - 1, y, hit);
-    redrawSquare(player, x, y - 1, hit);
-    redrawSquare(player, x + 1, y, hit);
-    redrawSquare(player, x, y + 1, hit);
+    doForSides(x, y, function(x, y) {
+      redrawSquare(player, x, y, hit);
+    });
   }
 };
 
