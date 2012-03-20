@@ -166,13 +166,28 @@ var drawEmpty = function(player, x, y) {
   });
 };
 
-var drawImage = function(image, player, x, y, overlay) {
+var drawImage = function(image, player, x, y) {
   doOnCanvas(player, function(ctx) {
-    if (!overlay) {
-      ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
-    }
-    ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
+    ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
   });
+
+  var intervalID;
+  var frame = 0;
+  var drawFrame = function(image) {
+    if (++frame > 10) {
+      clearInterval(intervalID);
+      return;
+    }
+    doOnCanvas(player, function(ctx) {
+      ctx.translate(SQUARE_SIZE * x, SQUARE_SIZE * y);
+      //ctx.clearRect(0, 0, SQUARE_SIZE, SQUARE_SIZE); // may be needed in the future
+      ctx.translate(SQUARE_SIZE / 2, SQUARE_SIZE / 2);
+      ctx.scale(frame / 10, frame / 10);
+      ctx.drawImage(image, SQUARE_SIZE / -2, SQUARE_SIZE / -2);
+    });
+  };
+
+  intervalID = setInterval(drawFrame, 50, image);
 };
 
 var drawBoatPiece = function(player, x, y, piece, hit) {
@@ -236,7 +251,7 @@ var drawMiss = function(player, x, y) {
 };
 
 var drawSunken= function(player, x, y) {
-  drawImage(sunken, player, x, y, true);
+  drawImage(sunken, player, x, y);
 };
 
 // ---------------------------
