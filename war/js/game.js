@@ -41,10 +41,13 @@ var resetGame = function() {
   for (i = 0; i < GRID_SQUARES; i++) {
     playerBoardElements[i] = new Array(GRID_SQUARES);
     enemyBoardElements[i] = new Array(GRID_SQUARES);
-    enemyBoardElements[i][i] = ELEMENT_BOAT;
   }
-  enemyBoardElements[1][0] = ELEMENT_BOAT;
-  enemyBoardElements[1][1] = null;
+  enemyBoatsX = new Array(5, 5, 7, 3, 4, 5, 8, 0, 8, 0, 2, 3, 5, 8, 0, 0, 2, 3, 9, 7);
+  enemyBoatsY = new Array(0, 1, 1, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 7, 7, 7, 7, 8); 
+  
+  for (i = 0; i < enemyBoatsX.length; i++) {
+    enemyBoardElements[enemyBoatsX[i]][enemyBoatsY[i]] = ELEMENT_BOAT; 
+  }
 
   for (i = 0; i < 4; i++) {
     boatsLeft[i] = 4 - i;
