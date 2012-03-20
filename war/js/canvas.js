@@ -71,6 +71,9 @@ boatRight.src = "img/boat-right.png";
 var boatRightHit = new Image();
 boatRightHit.src = "img/boat-right-hit.png";
 
+var sunken = new Image();
+sunken.src = "img/cross-hit.png";
+
 // -------------------
 // Utility functions
 // -------------------
@@ -163,9 +166,11 @@ var drawEmpty = function(player, x, y) {
   });
 };
 
-var drawImage = function(image, player, x, y) {
+var drawImage = function(image, player, x, y, overlay) {
   doOnCanvas(player, function(ctx) {
-    ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
+    if (!overlay) {
+      ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
+    }
     ctx.drawImage(image, SQUARE_SIZE * x, SQUARE_SIZE * y);
   });
 };
@@ -228,6 +233,10 @@ var drawHitBoat = function(player, x, y) {
 
 var drawMiss = function(player, x, y) {
   drawImage(miss, player, x, y);
+};
+
+var drawSunken= function(player, x, y) {
+  drawImage(sunken, player, x, y, true);
 };
 
 // ---------------------------

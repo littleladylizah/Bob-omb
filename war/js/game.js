@@ -102,11 +102,23 @@ var enemyMove = function() {
 // Bombing logic
 // ---------------
 
+var hitSquare = function(board, x, y) {
+  var squares = getBoatSquares(board, x, y);
+  if (squares.every(function(coords) {
+        return board[coords[0]][coords[1]] == ELEMENT_HIT_BOAT;
+      })) {
+    squares.forEach(function(coords) {
+      drawSunken(board == playerBoardElements, coords[0], coords[1]);
+    });
+  }
+};
+
 var bombPlayer = function(x, y) {
   if (playerBoardElements[x][y] == ELEMENT_BOAT) {
     playerBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawEmpty(true, x, y);
     drawHitBoat(true, x, y);
+    hitSquare(playerBoardElements, x, y);
     enemyMove();
   } else {
     playerBoardElements[x][y] = ELEMENT_MISS;
@@ -127,6 +139,7 @@ var bombEnemy = function(x, y) {
   } else {
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawHitBoat(false, x, y);
+    hitSquare(enemyBoardElements, x, y);
   }
 };
 
