@@ -96,8 +96,6 @@ var enemyMove = function() {
       && (playerBoardElements[randomX][randomY] == ELEMENT_MISS
           || playerBoardElements[randomX][randomY] == ELEMENT_HIT_BOAT));
 
-  console.log("x: " + randomX + ", y: " + randomY);
-  console.log(playerBoardElements[randomX][randomY]);
   window.setTimeout(bombPlayer, 500, randomX, randomY);
 }
 
@@ -398,9 +396,6 @@ var putBoat = function(x, y) {
 // -----------------------
 
 var handlePlayerCanvasClick = function(x, y) {
-
-  console.log(playerBoardElements[x][y]);
-
   if (gameStarted) {
     return;
   }
