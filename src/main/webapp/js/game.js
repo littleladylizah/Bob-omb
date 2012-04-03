@@ -41,10 +41,13 @@ var resetGame = function() {
   for (i = 0; i < GRID_SQUARES; i++) {
     playerBoardElements[i] = new Array(GRID_SQUARES);
     enemyBoardElements[i] = new Array(GRID_SQUARES);
-    enemyBoardElements[i][i] = ELEMENT_BOAT;
   }
-  enemyBoardElements[1][0] = ELEMENT_BOAT;
-  enemyBoardElements[1][1] = null;
+  enemyBoatsX = new Array(5, 5, 7, 3, 4, 5, 8, 0, 8, 0, 2, 3, 5, 8, 0, 0, 2, 3, 9, 7);
+  enemyBoatsY = new Array(0, 1, 1, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 7, 7, 7, 7, 8); 
+  
+  for (i = 0; i < enemyBoatsX.length; i++) {
+    enemyBoardElements[enemyBoatsX[i]][enemyBoatsY[i]] = ELEMENT_BOAT; 
+  }
 
   for (i = 0; i < 4; i++) {
     boatsLeft[i] = 4 - i;
@@ -93,8 +96,6 @@ var enemyMove = function() {
       && (playerBoardElements[randomX][randomY] == ELEMENT_MISS
           || playerBoardElements[randomX][randomY] == ELEMENT_HIT_BOAT));
 
-  console.log("x: " + randomX + ", y: " + randomY);
-  console.log(playerBoardElements[randomX][randomY]);
   window.setTimeout(bombPlayer, 500, randomX, randomY);
 }
 
@@ -395,9 +396,6 @@ var putBoat = function(x, y) {
 // -----------------------
 
 var handlePlayerCanvasClick = function(x, y) {
-
-  console.log(playerBoardElements[x][y]);
-
   if (gameStarted) {
     return;
   }
@@ -421,7 +419,6 @@ var getMousePosition = function(e) {
   var canoff = $(e.target).offset();
   var x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - Math.floor(canoff.left);
   var y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop - Math.floor(canoff.top) + 1;
-
   return [x, y];
 };
 

@@ -167,9 +167,6 @@ var drawEmpty = function(player, x, y) {
 };
 
 var drawImage = function(image, player, x, y) {
-  doOnCanvas(player, function(ctx) {
-    ctx.clearRect(SQUARE_SIZE * x, SQUARE_SIZE * y, SQUARE_SIZE, SQUARE_SIZE);
-  });
 
   var intervalID;
   var frame = 0;
@@ -187,7 +184,7 @@ var drawImage = function(image, player, x, y) {
     });
   };
 
-  intervalID = setInterval(drawFrame, 50, image);
+  intervalID = setInterval(drawFrame, 30, image);
 };
 
 var drawBoatPiece = function(player, x, y, piece, hit) {
