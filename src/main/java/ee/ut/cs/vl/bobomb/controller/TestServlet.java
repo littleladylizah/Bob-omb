@@ -1,7 +1,8 @@
 // vim: set sw=4 ts=4 et:
-package ee.ut.cs.vl.bobomb;
+package ee.ut.cs.vl.bobomb.controller;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/ajax/test")
 public class TestServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
