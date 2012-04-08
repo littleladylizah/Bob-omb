@@ -48,6 +48,17 @@ public class Game {
     public Player getPlayer2() {
         return player2;
     }
+    
+    public Player getBeginningPlayer() {
+    	
+    	Random generator = new Random();
+    	if (generator.nextInt(2) == 0) {
+    		return player1;
+    	}
+    	else {
+    		return player2;
+    	}
+    }
 
     private static enum State {
         CREATED,

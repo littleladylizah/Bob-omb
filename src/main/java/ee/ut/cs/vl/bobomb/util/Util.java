@@ -27,11 +27,4 @@ public class Util {
         }
         return res;
     }
-
-    /** Kas antud laevade paigutus on lubatud? */
-    public static boolean isValid(Grid grid) {
-        // TODO implementeeri mind
-        return true;
-    }
-
 }
