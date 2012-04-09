@@ -30,4 +30,5 @@ public class LeaderboardServlet extends HttpServlet {
         req.getRequestDispatcher("/WEB-INF/view/leaderboard.jsp")
                 .forward(req, resp);
     }
+
 }
