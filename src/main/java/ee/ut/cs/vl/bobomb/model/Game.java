@@ -1,6 +1,8 @@
 // vim: set sw=4 ts=4 et:
 package ee.ut.cs.vl.bobomb.model;
 
+import java.util.Random;
+
 public class Game {
 
     private State state = State.CREATED;
@@ -48,16 +50,15 @@ public class Game {
     public Player getPlayer2() {
         return player2;
     }
-    
+
     public Player getBeginningPlayer() {
-    	
-    	Random generator = new Random();
-    	if (generator.nextInt(2) == 0) {
-    		return player1;
-    	}
-    	else {
-    		return player2;
-    	}
+        Random generator = new Random();
+        if (generator.nextInt(2) == 0) {
+            return player1;
+        }
+        else {
+            return player2;
+        }
     }
 
     private static enum State {
