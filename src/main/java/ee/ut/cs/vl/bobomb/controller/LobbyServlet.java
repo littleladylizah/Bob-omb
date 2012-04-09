@@ -29,6 +29,16 @@ public class LobbyServlet extends HttpServlet {
         req.setAttribute("waiting", tmp);
         req.getRequestDispatcher("/WEB-INF/view/lobby.jsp")
                 .forward(req, resp);
+        
+        List<Player[]> tmp2 = new ArrayList<Player[]>();
+        Player[] pair = new Player[2];
+        pair[0] = new Player("Lauri");
+        pair[1] = new Player("Ivo");
+        tmp2.add(pair);
+        
+        req.setAttribute("ongoing", tmp2);
+        req.getRequestDispatcher("/WEB-INF/view/lobby.jsp")
+                .forward(req, resp);
     }
 
 }

@@ -16,11 +16,19 @@
   </c:choose>
 
   <h3>Käimasolevad mängud:</h3>
-  <ul>
-    <li>Tiit vs Liis</li>
-    <li>Liis vs Tiit</li>
-  </ul>
-
+  <c:choose>
+    <c:when test="${ongoing == null}">
+      Ühtegi mängu pole.
+    </c:when>
+    <c:otherwise>
+      <ul>
+        <c:forEach var="game" items="${ongoing}">
+          <li>${ongoing.player1} vs. ${ongoing.player2}</li>
+        </c:forEach>
+      </ul>
+    </c:otherwise>
+  </c:choose>
+  
   <a id="new-game" href="#">Loo oma mäng</a>
   <script type="text/javascript" src="js/overlay.js"></script>
 </div>
