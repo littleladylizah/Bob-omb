@@ -2,7 +2,6 @@
 package ee.ut.cs.vl.bobomb.util;
 
 import java.text.ParseException;
-import ee.ut.cs.vl.bobomb.model.Grid;
 
 public class Util {
 

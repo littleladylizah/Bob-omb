@@ -2,7 +2,6 @@
 package ee.ut.cs.vl.bobomb.model;
 
 import ee.ut.cs.vl.bobomb.util.Coordinates;
-import ee.ut.cs.vl.bobomb.util.Util;
 
 public class Grid {
 
