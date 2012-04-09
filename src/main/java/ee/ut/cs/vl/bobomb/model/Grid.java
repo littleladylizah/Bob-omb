@@ -56,6 +56,17 @@ public class Grid {
     public static boolean isOnGrid(int x, int y) {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
     }
+    
+    public boolean allBoatsHit() {
+    	for (int i = 0; i < SIZE; i++) {
+    		for (int j = 0; j < SIZE; j++) {
+    			if (grid[i][j] == Square.BOAT) {
+    				return false;
+    			}
+    		}
+    	}
+    	return true;
+    }
 
     private static enum Square {
         EMPTY,
