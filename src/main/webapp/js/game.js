@@ -28,6 +28,8 @@ var gameStarted = false;
 var deleteMode = false;
 var positioning = false;
 
+var g_playerID;
+
 // -----------------------
 // Game state handling
 // -----------------------
@@ -442,6 +444,7 @@ var handleCanvasClick = function(player, e) {
 
 $(window).load(function() {
   resetGame();
+  g_playerID = prompt("Palun sisesta oma nimi:", "");
   startPositioning();
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
