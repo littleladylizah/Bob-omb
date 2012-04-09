@@ -3,13 +3,13 @@
 <div class="lobby">
   <h3>Vali vastane:</h3>
   <c:choose>
-    <c:when test="${waiting == null}">
+    <c:when test="${empty waiting}">
       Ühtegi vastast pole.
     </c:when>
     <c:otherwise>
       <ul>
-        <c:forEach var="opponent" items="${waiting}">
-          <li>${opponent.name}</li>
+        <c:forEach var="game" items="${waiting}">
+          <li class="opponent-link">${game.player1.name}</li>
         </c:forEach>
       </ul>
     </c:otherwise>
@@ -17,7 +17,7 @@
 
   <h3>Käimasolevad mängud:</h3>
   <c:choose>
-    <c:when test="${ongoing == null}">
+    <c:when test="${empty ongoing}">
       Ühtegi mängu pole.
     </c:when>
     <c:otherwise>
@@ -29,6 +29,6 @@
     </c:otherwise>
   </c:choose>
   
-  <a id="new-game" href="#">Loo oma mäng</a>
-  <script type="text/javascript" src="js/overlay.js"></script>
+  <p id="new-game">Loo oma mäng</p>
+  <script type="text/javascript" src="js/ui/overlay.js"></script>
 </div>

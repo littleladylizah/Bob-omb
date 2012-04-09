@@ -12,7 +12,18 @@ $(function() {
   });
 });
 
-$("div.lobby li, #new-game").click(function() {
+var setOpponentName = function(name) {
+  $("#enemy-title").text(name);
+};
+
+$("div.lobby li.opponent-link").click(function() {
   $("a[rel]").overlay({api: true}).close();
   showBoats();
+  joinGame($(this).text(), setOpponentName);
+});
+
+$("div.lobby #new-game").click(function() {
+  $("a[rel]").overlay({api: true}).close();
+  showBoats();
+  createNewGame(setOpponentName);
 });

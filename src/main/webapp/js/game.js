@@ -84,6 +84,39 @@ var setTurnOfPlayer = function(player) {
   });
 };
 
+// ----------------------
+// Server communication
+// ----------------------
+var createNewGame = function(callback) {
+  $.ajax("ajax/lobby", {
+      type: "POST",
+      data: {
+        action: "create",
+        name: g_playerID
+      },
+      success: function(data) {
+        startPositioning();
+        callback(data);
+      }
+  });
+  callback("...");
+};
+
+var joinGame = function(opponent, callback) {
+  $.ajax("ajax/lobby", {
+      type: "POST",
+      data: {
+        action: "join",
+        name: g_playerID,
+        opponent: opponent
+      },
+      success: function(data) {
+        startPositioning();
+        callback(data);
+      }
+  });
+};
+
 // --------------
 // Temporary AI
 // --------------
@@ -398,7 +431,7 @@ var putBoat = function(x, y) {
 // -----------------------
 
 var handlePlayerCanvasClick = function(x, y) {
-  if (gameStarted) {
+  if (!positioning) {
     return;
   }
 
@@ -444,8 +477,7 @@ var handleCanvasClick = function(player, e) {
 
 $(window).load(function() {
   resetGame();
-  g_playerID = prompt("Palun sisesta oma nimi:", "");
-  startPositioning();
+  g_playerID = prompt("Palun sisesta oma nimi:", "Default");
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });

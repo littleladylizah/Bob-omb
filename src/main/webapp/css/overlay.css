@@ -34,8 +34,12 @@ div.lobby {
   text-align: center;
 }
 
-div.lobby a {
-  display: block;
+div.lobby li.opponent-link {
+  cursor: pointer;
+}
+
+div.lobby #new-game {
+  cursor: pointer;
   margin-top: 1em;
   font-size: 2em;
 }
