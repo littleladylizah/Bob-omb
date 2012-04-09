@@ -10,6 +10,7 @@ public class Game {
     private Player player2;
     private Grid p1Grid;
     private Grid p2Grid;
+    private boolean turn; // true: player1, false: player 2
 
     public Game(Player player) {
         this.player1 = player;
@@ -18,6 +19,7 @@ public class Game {
     public void addOpponent(Player player) {
         this.player2 = player;
         this.state = State.PREPARING;
+        this.turn = new Random().nextBoolean();
     }
 
     public boolean addGrid(boolean forP1, Grid grid) {
@@ -50,17 +52,10 @@ public class Game {
     public Player getPlayer2() {
         return player2;
     }
-    
-    /*public Player getBeginningPlayer() {
-    	
-    	Random generator = new Random();
-    	if (generator.nextInt(2) == 0) {
-    		return player1;
-    	}
-    	else {
-    		return player2;
-    	}
-    }*/
+
+    public boolean isPlayer1Turn() {
+        return turn;
+    }
 
     private static enum State {
         CREATED,
