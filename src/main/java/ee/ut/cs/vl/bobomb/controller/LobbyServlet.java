@@ -35,6 +35,9 @@ public class LobbyServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        resp.setContentType("text/plain");
+        resp.setCharacterEncoding("utf-8");
+
         String action = req.getParameter("action");
         if ("create".equals(action)) {
             createGame(req, resp);
