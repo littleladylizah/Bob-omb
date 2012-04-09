@@ -23,7 +23,7 @@
     <c:otherwise>
       <ul>
         <c:forEach var="game" items="${ongoing}">
-          <li>${ongoing.player1} vs. ${ongoing.player2}</li>
+          <li>${game.player1} vs. ${ongoing.player2}</li>
         </c:forEach>
       </ul>
     </c:otherwise>
