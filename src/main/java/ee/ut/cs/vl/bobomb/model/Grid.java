@@ -47,10 +47,6 @@ public class Grid {
         }
     }
 
-    public boolean isValid() {
-        return Util.isValid(this);
-    }
-
     private void validateCoordinates(int x, int y) {
         if (!isOnGrid(x, y)) {
             throw new IllegalArgumentException("Koordinaadid (" + x + ", " + y
