@@ -2,8 +2,6 @@
 package ee.ut.cs.vl.bobomb.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ee.ut.cs.vl.bobomb.model.Player;
+import ee.ut.cs.vl.bobomb.db.PostgresDB;
 
 @WebServlet("/ajax/leaderboard")
 public class LeaderboardServlet extends HttpServlet {
@@ -21,12 +19,7 @@ public class LeaderboardServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<Player> tmp = new ArrayList<Player>();
-        tmp.add(new Player("Liis"));
-        tmp.add(new Player("Tiit"));
-        tmp.add(new Player("Thor"));
-
-        req.setAttribute("players", tmp);
+        req.setAttribute("players", PostgresDB.getLeaderboard());
         req.getRequestDispatcher("/WEB-INF/view/leaderboard.jsp")
                 .forward(req, resp);
     }

@@ -11,16 +11,14 @@ public class Player {
         this.name = name;
     }
 
-    public void won() {
-        wins++;
+    public Player(String name, long wins, long losses) {
+        this.name = name;
+        this.wins = wins;
+        this.losses = losses;
     }
 
-    public void lost() {
-        losses++;
-    }
-
-    public long getGamesPlayed() {
-        return wins + losses;
+    public long getWinPercentage() {
+        return (100 * wins) / (100 * (wins + losses));
     }
 
     public long getGamesWon() {
