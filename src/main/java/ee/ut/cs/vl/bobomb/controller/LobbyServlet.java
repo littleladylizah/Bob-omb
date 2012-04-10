@@ -22,12 +22,15 @@ public class LobbyServlet extends HttpServlet {
     // Games mapped by player1's id
     private Map<String, Game> openGames = new HashMap<String, Game>();
     private Map<String, Game> ongoingGames = new HashMap<String, Game>();
+    private Object lock = new Object();
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.setAttribute("waiting", openGames.values());
-        req.setAttribute("ongoing", ongoingGames.values());
+        synchronized (lock) {
+            req.setAttribute("waiting", openGames.values());
+            req.setAttribute("ongoing", ongoingGames.values());
+        }
         req.getRequestDispatcher("/WEB-INF/view/lobby.jsp")
                 .forward(req, resp);
     }
@@ -37,6 +40,11 @@ public class LobbyServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/plain");
         resp.setCharacterEncoding("utf-8");
+
+        Game current = (Game) req.getSession().getAttribute("game");
+        if (current != null) {
+            gameDone(current);
+        }
 
         String action = req.getParameter("action");
         if ("create".equals(action)) {
@@ -49,27 +57,23 @@ public class LobbyServlet extends HttpServlet {
     private void createGame(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
         String name = req.getParameter("name");
-        Game game = new Game(new Player(name));
+        Player player = new Player(name);
+        Game game = new Game(player);
 
-        openGames.put(name, game);
+        synchronized (lock) {
+            openGames.put(name, game);
+        }
         req.getSession().setAttribute("game", game);
 
-        /* block until we have opponent */
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                break;
-            }
-
-            synchronized (game) {
-                if (game.getPlayer2() != null) {
-                    break;
+        synchronized (player) {
+            while (game.getPlayer2() == null) {
+                try {
+                    player.wait();
+                } catch (InterruptedException e) {
+                    return;
                 }
             }
         }
-
         resp.getWriter().print(game.getPlayer2().getName());
     }
 
@@ -77,21 +81,31 @@ public class LobbyServlet extends HttpServlet {
             throws IOException {
         String name = req.getParameter("name");
         String opponent = req.getParameter("opponent");
-        Game game = openGames.get(opponent);
+        Game game;
+        synchronized (lock) {
+            game = openGames.get(opponent);
+        }
 
         synchronized (game) {
             game.addOpponent(new Player(name));
         }
+        synchronized (game.getPlayer1()) {
+            game.getPlayer1().notify();
+        }
         req.getSession().setAttribute("game", game);
 
-        openGames.remove(opponent);
-        ongoingGames.put(opponent, game);
+        synchronized (lock) {
+            openGames.remove(opponent);
+            ongoingGames.put(opponent, game);
+        }
 
         resp.getWriter().print(game.getPlayer1().getName());
     }
 
     void gameDone(Game game) {
-        ongoingGames.remove(game.getPlayer1().getName());
+        synchronized (lock) {
+            ongoingGames.remove(game.getPlayer1().getName());
+        }
     }
 
 }

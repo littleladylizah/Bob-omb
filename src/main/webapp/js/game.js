@@ -477,7 +477,9 @@ var handleCanvasClick = function(player, e) {
 
 $(window).load(function() {
   resetGame();
-  g_playerID = prompt("Palun sisesta oma nimi:", "Default");
+  while (g_playerID == undefined || g_playerID.trim().length == 0) {
+    g_playerID = prompt("Palun sisesta oma nimi:", "Default");
+  }
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });
