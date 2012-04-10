@@ -37,6 +37,7 @@ var g_playerID;
 var resetGame = function() {
   boatSelected = 0;
   drawnParts = 0;
+  setTurnOfPlayer(0);
   gameStarted = false;
   positioning = false;
 
@@ -71,6 +72,10 @@ var startGame = function() {
   positioning = false;
   setTurnOfPlayer(1);
   return true;
+};
+
+var finishGame = function(won) {
+  setTurnOfPlayer(0);
 };
 
 var registerTurnChangeListener = function(callback) {
@@ -117,22 +122,45 @@ var joinGame = function(opponent, callback) {
   });
 };
 
-// --------------
-// Temporary AI
-// --------------
-
 var enemyMove = function() {
-  // Select a random square the AI hasn't bombed yet
-  do {
-    var randomX = Math.floor(Math.random()*10);
-    var randomY = Math.floor(Math.random()*10);
-  } while (playerBoardElements[randomX] != null
-      && playerBoardElements[randomX][randomY] != null
-      && (playerBoardElements[randomX][randomY] == ELEMENT_MISS
-          || playerBoardElements[randomX][randomY] == ELEMENT_HIT_BOAT));
-
-  window.setTimeout(bombPlayer, 500, randomX, randomY);
+  $.ajax("ajax/game", {
+      type: "POST",
+      data: {
+        action: "enemyMove"
+      },
+      success: function(data) {
+        var tokens = data.split(";");
+        var xy = tokens[0];
+        var winner = tokens[1];
+        if (winner != "null") {
+          finishGame(false);
+        }
+        bombPlayer(parseInt(xy.charAt(0)), parseInt(xy.charAt(1)));
+      }
+  });
 }
+
+var bomb = function(x, y) {
+  if (enemyBoardElements[x][y] == ELEMENT_MISS) {
+    return;
+  }
+  $.ajax("ajax/game", {
+      type: "POST",
+      data: {
+        action: "bomb",
+        square: "" + x + y
+      },
+      success: function(data) {
+        var tokens = data.split(";");
+        var hit = tokens[0] == "true";
+        var winner = tokens[1];
+        if (winner != "null") {
+          finishGame(true);
+        }
+        bombEnemy(hit, x, y);
+      }
+  });
+};
 
 // ---------------
 // Bombing logic
@@ -163,11 +191,8 @@ var bombPlayer = function(x, y) {
   }
 };
 
-var bombEnemy = function(x, y) {
-  if (enemyBoardElements[x][y] == ELEMENT_MISS) {
-    return;
-  }
-  if (enemyBoardElements[x][y] == null) {
+var bombEnemy = function(hit, x, y) {
+  if (!hit) {
     enemyBoardElements[x][y] = ELEMENT_MISS;
     drawMiss(false, x, y);
     setTurnOfPlayer(2);
@@ -446,7 +471,7 @@ var handleEnemyCanvasClick = function(x, y) {
   if (turnOfPlayer != 1) {
     return;
   }
-  bombEnemy(x, y);
+  bomb(x, y);
 };
 
 /* function from http://stackoverflow.com/a/5417934 */

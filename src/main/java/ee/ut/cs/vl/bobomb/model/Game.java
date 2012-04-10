@@ -47,7 +47,9 @@ public class Game {
         if (grid.allBoatsHit()) {
             state = State.FINISHED;
         }
-        turn = !turn;
+        if (!res) {
+            turn = !turn;
+        }
         return res;
     }
 

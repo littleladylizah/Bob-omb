@@ -8,9 +8,12 @@ $(window).load(function() {
     if (turn == 1) {
       $("#player-title").addClass("player-turn");
       $("#enemy-title").removeClass("player-turn");
-    } else {
+    } else if (turn == 2) {
       $("#player-title").removeClass("player-turn");
       $("#enemy-title").addClass("player-turn");
+    } else {
+      $("#player-title").removeClass("player-turn");
+      $("#enemy-title").removeClass("player-turn");
     }
   });
 });

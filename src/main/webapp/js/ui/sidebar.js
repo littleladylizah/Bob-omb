@@ -54,6 +54,7 @@ var showBoats = function() {
     $("#sidebar-content #confirm-boats").click(function() {
       if (startGame()) {
         showMoves();
+        toggler.click();
       }
     });
   });
