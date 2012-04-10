@@ -67,31 +67,20 @@ public class GameServlet extends HttpServlet {
         resp.getWriter().print(game.isPlayer1Turn() == forP1);
     }
 
-    private void waitOpponent(Game game, boolean forP1) {
-        Player player = forP1 ? game.getPlayer1() : game.getPlayer2();
-        Player opponent = forP1 ? game.getPlayer2() : game.getPlayer1();
+    private void waitOpponent(Game game, boolean isPlayer1) {
+        Player player = isPlayer1 ? game.getPlayer1() : game.getPlayer2();
+        Player opponent = isPlayer1 ? game.getPlayer2() : game.getPlayer1();
 
         synchronized (opponent) {
             opponent.notify();
         }
 
         synchronized (player) {
-            if (forP1) {
-                while (!(game.isGridDefined(!forP1))) {
-                    try {
-                        player.wait();
-                    } catch (InterruptedException e) {
-                        return;
-                    }
-                }
-            }
-            else {
-                while (!(game.isGridDefined(forP1))) {
-                    try {
-                        player.wait();
-                    } catch (InterruptedException e) {
-                        return;
-                    }
+            while (!game.isGridDefined(!isPlayer1)) {
+                try {
+                    player.wait();
+                } catch (InterruptedException e) {
+                    return;
                 }
             }
         }

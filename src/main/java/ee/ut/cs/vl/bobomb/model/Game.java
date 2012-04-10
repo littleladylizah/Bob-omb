@@ -78,13 +78,10 @@ public class Game {
     }
 
     public boolean isGridDefined(boolean forP1) {
-        if (forP1 && p1Grid != null) {
-            return true;
+        if (forP1) {
+            return p1Grid != null;
         }
-        else if (!forP1 && p2Grid != null) {
-            return true;
-        }
-        return false;
+        return p2Grid != null;
     }
 
     private static enum State {
