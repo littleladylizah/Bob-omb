@@ -72,7 +72,7 @@ public class PostgresDB {
         }
     }
 
-    public void saveGame(Game game) {
+    public static void saveGame(Game game) {
         PreparedStatement ps = null;
         try {
             ps = createConnection().prepareStatement(

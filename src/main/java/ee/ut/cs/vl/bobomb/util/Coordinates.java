@@ -11,4 +11,8 @@ public class Coordinates {
        this.y = y;
     }
 
+    public String toString() {
+        return "" + x + y;
+    }
+
 }

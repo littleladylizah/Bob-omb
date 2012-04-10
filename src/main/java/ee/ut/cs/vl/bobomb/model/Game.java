@@ -3,6 +3,8 @@ package ee.ut.cs.vl.bobomb.model;
 
 import java.util.Random;
 
+import ee.ut.cs.vl.bobomb.util.Coordinates;
+
 public class Game {
 
     private State state = State.CREATED;
@@ -11,6 +13,7 @@ public class Game {
     private Grid p1Grid;
     private Grid p2Grid;
     private boolean turn; // true: player1, false: player 2
+    private Coordinates lastMove;
 
     public Game(Player player) {
         this.player1 = player;
@@ -37,6 +40,17 @@ public class Game {
         }
     }
 
+    public boolean bomb(boolean player1, Coordinates coords) {
+        lastMove = coords;
+        Grid grid = player1 ? p1Grid : p2Grid;
+        boolean res = grid.bomb(coords.x, coords.y);
+        if (grid.allBoatsHit()) {
+            state = State.FINISHED;
+        }
+        turn = !turn;
+        return res;
+    }
+
     public boolean isStarted() {
         return State.STARTED == state;
     }
@@ -55,6 +69,10 @@ public class Game {
 
     public boolean isPlayer1Turn() {
         return turn;
+    }
+
+    public Coordinates getLastMove() {
+        return lastMove;
     }
 
     private static enum State {

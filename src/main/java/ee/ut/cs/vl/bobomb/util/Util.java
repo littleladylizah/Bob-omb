@@ -20,10 +20,15 @@ public class Util {
             if (!token.matches("^\\d{2}$")) {
                 throw new ParseException("Vigane koordinaat " + token, i);
             }
-            int x = Integer.valueOf(token.substring(0, 1));
-            int y = Integer.valueOf(token.substring(1, 2));
-            res[i] = new Coordinates(x, y);
+            res[i] = parseCoordinates(token);
         }
         return res;
     }
+
+    public static Coordinates parseCoordinates(String coords) {
+        int x = Integer.valueOf(coords.substring(0, 1));
+        int y = Integer.valueOf(coords.substring(1, 2));
+        return new Coordinates(x, y);
+    }
+
 }

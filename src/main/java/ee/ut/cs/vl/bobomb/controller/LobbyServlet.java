@@ -64,6 +64,7 @@ public class LobbyServlet extends HttpServlet {
             openGames.put(name, game);
         }
         req.getSession().setAttribute("game", game);
+        req.getSession().setAttribute("lobbyServlet", this);
 
         synchronized (player) {
             while (game.getPlayer2() == null) {
@@ -93,6 +94,7 @@ public class LobbyServlet extends HttpServlet {
             game.getPlayer1().notify();
         }
         req.getSession().setAttribute("game", game);
+        req.getSession().setAttribute("lobbyServlet", this);
 
         synchronized (lock) {
             openGames.remove(opponent);
