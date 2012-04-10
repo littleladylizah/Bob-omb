@@ -59,6 +59,7 @@ public class LobbyServlet extends HttpServlet {
         String name = req.getParameter("name");
         Player player = new Player(name);
         Game game = new Game(player);
+        req.getSession().setAttribute("player1", true);
 
         synchronized (lock) {
             openGames.put(name, game);
@@ -90,6 +91,8 @@ public class LobbyServlet extends HttpServlet {
         synchronized (game) {
             game.addOpponent(new Player(name));
         }
+        req.getSession().setAttribute("player1", false);
+        
         synchronized (game.getPlayer1()) {
             game.getPlayer1().notify();
         }

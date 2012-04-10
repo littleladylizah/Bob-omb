@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import ee.ut.cs.vl.bobomb.db.PostgresDB;
 import ee.ut.cs.vl.bobomb.model.Game;
+import ee.ut.cs.vl.bobomb.model.Grid;
 import ee.ut.cs.vl.bobomb.model.Player;
 import ee.ut.cs.vl.bobomb.util.Coordinates;
 import ee.ut.cs.vl.bobomb.util.Util;
@@ -19,7 +20,7 @@ import ee.ut.cs.vl.bobomb.util.Util;
 @WebServlet("/ajax/game")
 public class GameServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;    
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -34,7 +35,7 @@ public class GameServlet extends HttpServlet {
         }
 
         String action = req.getParameter("action");
-        if ("grid".equals(action)) {
+        if ("send_grid".equals(action)) {
             addGrid(req, resp);
         } else if ("enemyMove".equals(action)) {
             enemyMove(req, resp);
@@ -43,8 +44,57 @@ public class GameServlet extends HttpServlet {
         }
     }
 
-    private void addGrid(HttpServletRequest req, HttpServletResponse resp) {
-        // Stubby McStub-Stub
+    private void addGrid(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        String gridStr = req.getParameter("grid");
+        Grid playerBoard;
+        try {
+            playerBoard = new Grid(Util.parseGrid(gridStr));
+        }
+        catch (java.text.ParseException e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        Game game = (Game) req.getSession().getAttribute("game");
+        boolean forP1 = (Boolean) req.getSession().getAttribute("player1");
+
+        synchronized (game) {
+            game.addGrid(forP1, playerBoard);
+        }
+        waitOpponent(game, forP1);
+        resp.getWriter().print(game.isPlayer1Turn() == forP1);
+    }
+
+    private void waitOpponent(Game game, boolean forP1) {
+        Player player = forP1 ? game.getPlayer1() : game.getPlayer2();
+        Player opponent = forP1 ? game.getPlayer2() : game.getPlayer1();
+
+        synchronized (opponent) {
+            opponent.notify();
+        }
+
+        synchronized (player) {
+            if (forP1) {
+                while (!(game.isGridDefined(!forP1))) {
+                    try {
+                        player.wait();
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
+            }
+            else {
+                while (!(game.isGridDefined(forP1))) {
+                    try {
+                        player.wait();
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     private void enemyMove(HttpServletRequest req, HttpServletResponse resp)

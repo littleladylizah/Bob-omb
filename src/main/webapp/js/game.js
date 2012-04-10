@@ -68,11 +68,15 @@ var startGame = function() {
     return false;
   }
   removeForbidden();
-  gameStarted = true;
   positioning = false;
-  setTurnOfPlayer(1);
+  sendGrid(setGameStarted);
   return true;
 };
+
+var setGameStarted = function(beginner) {
+  gameStarted = true;
+  setTurnOfPlayer(beginner);
+}
 
 var finishGame = function(won) {
   setTurnOfPlayer(0);
@@ -121,6 +125,19 @@ var joinGame = function(opponent, callback) {
       }
   });
 };
+
+var sendGrid = function() {
+  $.ajax("ajax/game", {
+      type: "POST",
+      data: {
+        action: "send_grid",
+        grid: gridToString(playerBoardElements)
+      },
+      success: function(data) {
+        setGameStarted(data ? 1 : 2);
+      }
+  });
+}
 
 var enemyMove = function() {
   $.ajax("ajax/game", {
@@ -234,6 +251,18 @@ var getBoatSquares = function(board, x, y, elements) {
 
   return findConnected([], [x, y], [null, null]);
 };
+
+var gridToString = function(grid) {
+  var gridString = "";
+  for (i = 0; i < GRID_SQUARES; i++) {
+    for (j = 0; j < GRID_SQUARES; j++) {
+      if (grid[i][j] == ELEMENT_BOAT) {
+        gridString += " " + i + j;
+      }
+    }
+  }
+  return gridString;
+}
 
 // ------------------------
 // Boat positioning logic
