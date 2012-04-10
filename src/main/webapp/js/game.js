@@ -67,11 +67,15 @@ var startGame = function() {
     return false;
   }
   removeForbidden();
-  gameStarted = true;
   positioning = false;
-  setTurnOfPlayer(1);
+  sendGrid();
   return true;
 };
+
+var setGameStarted = function(beginner) {
+  gameStarted = true;
+  setTurnOfPlayer(beginner);
+}
 
 var registerTurnChangeListener = function(callback) {
   turnChangeCallbacks.push(callback);
@@ -83,6 +87,18 @@ var setTurnOfPlayer = function(player) {
     callback(player);
   });
 };
+
+var gridToString = function(grid) {
+  var gridString = "";
+  for (i = 0; i < GRID_SQUARES; i++) {
+    for (j = 0; j < GRID_SQUARES; j++) {
+      if (grid[i][j] == ELEMENT_BOAT) {
+        gridString += i + j + " ";
+      }
+    }
+  }
+  return gridString;
+}
 
 // ----------------------
 // Server communication
@@ -116,6 +132,19 @@ var joinGame = function(opponent, callback) {
       }
   });
 };
+
+var sendGrid = function(callback) {
+  $.ajax("ajax/game", {
+      type: "POST",
+      data: {
+        action: "send_grid",
+        grid: gridToString(playerBoardElements)
+      },
+      success: function(data) {
+        callback(data);
+      }
+  });
+}
 
 // --------------
 // Temporary AI
