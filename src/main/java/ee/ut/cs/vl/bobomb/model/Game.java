@@ -57,6 +57,16 @@ public class Game {
         return turn;
     }
 
+    public boolean isGridDefined(boolean forP1) {
+        if (forP1 && p1Grid != null) {
+            return true;
+        }
+        else if (!forP1 && p2Grid != null) {
+            return true;
+        }
+        return false;
+    }
+    
     private static enum State {
         CREATED,
         PREPARING,

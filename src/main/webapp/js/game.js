@@ -68,7 +68,7 @@ var startGame = function() {
   }
   removeForbidden();
   positioning = false;
-  sendGrid();
+  sendGrid(setGameStarted);
   return true;
 };
 
@@ -87,18 +87,6 @@ var setTurnOfPlayer = function(player) {
     callback(player);
   });
 };
-
-var gridToString = function(grid) {
-  var gridString = "";
-  for (i = 0; i < GRID_SQUARES; i++) {
-    for (j = 0; j < GRID_SQUARES; j++) {
-      if (grid[i][j] == ELEMENT_BOAT) {
-        gridString += i + j + " ";
-      }
-    }
-  }
-  return gridString;
-}
 
 // ----------------------
 // Server communication
@@ -238,6 +226,18 @@ var getBoatSquares = function(board, x, y, elements) {
 
   return findConnected([], [x, y], [null, null]);
 };
+
+var gridToString = function(grid) {
+  var gridString = "";
+  for (i = 0; i < GRID_SQUARES; i++) {
+    for (j = 0; j < GRID_SQUARES; j++) {
+      if (grid[i][j] == ELEMENT_BOAT) {
+        gridString += " " + i + j;
+      }
+    }
+  }
+  return gridString;
+}
 
 // ------------------------
 // Boat positioning logic

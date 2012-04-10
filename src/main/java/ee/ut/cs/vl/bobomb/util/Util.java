@@ -13,7 +13,7 @@ public class Util {
             return null;
         }
 
-        String[] tokens = gridString.split(" ");
+        String[] tokens = gridString.trim().split(" ");
         Coordinates[] res = new Coordinates[tokens.length];
         for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];

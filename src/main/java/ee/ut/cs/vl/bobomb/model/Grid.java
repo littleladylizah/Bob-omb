@@ -3,8 +3,6 @@ package ee.ut.cs.vl.bobomb.model;
 
 import ee.ut.cs.vl.bobomb.util.Coordinates;
 
-import java.util.List;
-
 public class Grid {
 
     public static final int SIZE = 10;
@@ -19,7 +17,7 @@ public class Grid {
         }
     }
 
-    public Grid(List<Coordinates> coords) {
+    public Grid(Coordinates[] coords) {
         for (Coordinates c : coords) {
             validateCoordinates(c.x , c.y);
             grid[c.x][c.y] = Square.BOAT;
