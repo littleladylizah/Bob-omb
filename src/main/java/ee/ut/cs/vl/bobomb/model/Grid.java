@@ -29,16 +29,48 @@ public class Grid {
                 || Square.BOAT == grid[x][y];
     }
 
-    public boolean bomb(int x, int y) {
+    public String bomb(int x, int y) {
         validateCoordinates(x, y);
         switch (grid[x][y]) {
         case EMPTY:
             grid[x][y] = Square.MISSED;
-            return false;
+            return "false";
 
         case BOAT:
             grid[x][y] = Square.HIT_BOAT;
-            return true;
+            for (int i = x + 1; i < SIZE; i++) {
+                if (grid[i][y] == Square.BOAT) {
+                    return "true";
+                }
+                if (grid[i][y] == Square.MISS) {
+                    break;
+                }
+            }
+             for (int i = x - 1; i >= 0; i--) {
+                if (grid[i][y] == Square.BOAT) {
+                    return "true";
+                }
+                if (grid[i][y] == Square.MISS) {
+                    break;
+                } 
+            }
+             for (int i = y + 1; i < SIZE; i++) {
+                 if (grid[x][i] == Square.BOAT) {
+                     return "true";
+                 }
+                 if (grid[x][i] == Square.MISS) {
+                     break;
+                 }
+             }
+              for (int i = y - 1; i >= 0; i--) {
+                 if (grid[x][i] == Square.BOAT) {
+                     return "true";
+                 }
+                 if (grid[x][i] == Square.MISS) {
+                     break;
+                 } 
+             }
+            return "sunken";
 
         default:
             throw new IllegalArgumentException("Ruutu (" + x + ", " + y

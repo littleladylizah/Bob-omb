@@ -113,7 +113,8 @@ public class GameServlet extends HttpServlet {
         Boolean player1 = (Boolean) sess.getAttribute("player1");
         Coordinates coords = Util.parseCoordinates(req.getParameter("square"));
 
-        boolean hit, finished;
+        String hit; 
+        boolean finished;
         synchronized (game) {
             hit = game.bomb(!player1, coords);
             finished = game.isFinished();
