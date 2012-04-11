@@ -30,6 +30,8 @@ var positioning = false;
 
 var g_playerID;
 
+var showResultFunction;
+
 // -----------------------
 // Game state handling
 // -----------------------
@@ -77,6 +79,7 @@ var setGameStarted = function(beginner) {
 
 var finishGame = function(won) {
   setTurnOfPlayer(0);
+  showResultFunction(won);
 };
 
 var registerTurnChangeListener = function(callback) {
@@ -553,3 +556,7 @@ $(window).load(function() {
     handleCanvasClick(false, e);
   });
 });
+
+var setShowResultFunction = function(f) {
+  showResultFunction = f;
+}

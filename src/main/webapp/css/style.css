@@ -61,3 +61,39 @@ a {
 div.clearfix {
   clear: both;
 }
+
+#result {
+  color: #609000;
+  font-size: 1.4em;
+  display: none;
+  height: 70px;
+  width: 350px;
+  padding: 50px;
+  background-image: url(../img/fuzz.png);
+  text-align: center;
+  font-size: 4em;
+  font-weight: bold;
+  top: 30%;
+  left: 30%;
+  position:absolute;
+  z-index: 100;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  border-left: 10px solid #d8d8a8;
+  border-right: 10px solid #d8d8a8;
+  border-top: 10px solid #d8d8a8;
+  border-bottom: 10px solid #d8d8a8;
+}
+
+#fuzz {
+  position:absolute; 
+  top:0; 
+  left:0; 
+  width:100%; 
+  z-index:99;
+  opacity: 0.7;
+  background: url(../img/fuzz.png); 
+  display:none;
+}

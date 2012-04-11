@@ -4,6 +4,7 @@
 
 $(window).load(function() {
   $("#player-title").text(g_playerID);
+  setShowResultFunction(showResult);
   registerTurnChangeListener(function(turn) {
     if (turn == 1) {
       $("#player-title").addClass("player-turn");
@@ -17,3 +18,26 @@ $(window).load(function() {
     }
   });
 });
+
+var showResult = function(result) {
+   $("#fuzz").css("height", $(document).height());
+   $("#fuzz").fadeIn();
+   if (result) {
+     $("#result").text("Sinu võit!");
+     $("#result").slideDown();
+   }
+   else {
+     $("#result").text("Sinu kaotus.");
+     $("#result").slideDown();
+   }
+   
+   $("#fuzz").click( function() {
+     $("#fuzz").fadeOut();
+     $("#result").slideUp();
+   });
+   
+   $("#result").click( function() {
+     $("#fuzz").fadeOut();
+     $("#result").slideUp();
+   });
+};
