@@ -93,8 +93,9 @@ public class GameServlet extends HttpServlet {
         Boolean player1 = (Boolean) sess.getAttribute("player1");
         Player player = player1 ? game.getPlayer1() : game.getPlayer2();
 
+        Coordinates lastTurn = game.getLastMove();
         synchronized (player) {
-            while (game.isPlayer1Turn() != player1) {
+            while (lastTurn == game.getLastMove()) {
                 try {
                     player.wait();
                 } catch (InterruptedException e) {

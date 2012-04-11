@@ -45,12 +45,6 @@ var resetGame = function() {
     playerBoardElements[i] = new Array(GRID_SQUARES);
     enemyBoardElements[i] = new Array(GRID_SQUARES);
   }
-  enemyBoatsX = new Array(5, 5, 7, 3, 4, 5, 8, 0, 8, 0, 2, 3, 5, 8, 0, 0, 2, 3, 9, 7);
-  enemyBoatsY = new Array(0, 1, 1, 3, 3, 3, 3, 4, 4, 5, 5, 5, 5, 5, 6, 7, 7, 7, 7, 8); 
-  
-  for (i = 0; i < enemyBoatsX.length; i++) {
-    enemyBoardElements[enemyBoatsX[i]][enemyBoatsY[i]] = ELEMENT_BOAT; 
-  }
 
   for (i = 0; i < 4; i++) {
     boatsLeft[i] = 4 - i;
@@ -76,6 +70,9 @@ var startGame = function() {
 var setGameStarted = function(beginner) {
   gameStarted = true;
   setTurnOfPlayer(beginner);
+  if (beginner == 2) {
+    enemyMove();
+  }
 }
 
 var finishGame = function(won) {
@@ -134,7 +131,7 @@ var sendGrid = function() {
         grid: gridToString(playerBoardElements)
       },
       success: function(data) {
-        setGameStarted(data ? 1 : 2);
+        setGameStarted(data == "true" ? 1 : 2);
       }
   });
 }
@@ -169,12 +166,10 @@ var bomb = function(x, y) {
       },
       success: function(data) {
         var tokens = data.split(";");
-        var hit = tokens[0] == "true";
-        var winner = tokens[1];
-        if (winner != "null") {
+        if (tokens[1] != "null") {
           finishGame(true);
         }
-        bombEnemy(hit, x, y);
+        bombEnemy(tokens[0], x, y);
       }
   });
 };
@@ -183,13 +178,14 @@ var bomb = function(x, y) {
 // Bombing logic
 // ---------------
 
-var hitSquare = function(board, x, y) {
+var hitPlayerSquare = function(x, y) {
+  var board = playerBoardElements;
   var squares = getBoatSquares(board, x, y);
   if (squares.every(function(coords) {
         return board[coords[0]][coords[1]] == ELEMENT_HIT_BOAT;
       })) {
     squares.forEach(function(coords) {
-      drawSunken(board == playerBoardElements, coords[0], coords[1]);
+      drawSunken(true, coords[0], coords[1]);
     });
   }
 };
@@ -199,25 +195,41 @@ var bombPlayer = function(x, y) {
     playerBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawEmpty(true, x, y);
     drawHitBoat(true, x, y);
-    hitSquare(playerBoardElements, x, y);
-    enemyMove();
+    hitPlayerSquare(x, y);
+    if (turnOfPlayer == 2) {
+      enemyMove();
+    }
   } else {
     playerBoardElements[x][y] = ELEMENT_MISS;
     drawMiss(true, x, y);
-    setTurnOfPlayer(1);
+    if (turnOfPlayer != 0) {
+      setTurnOfPlayer(1);
+    }
   }
 };
 
+var sinkEnemyBoat = function(x, y) {
+  var board = enemyBoardElements;
+  var squares = getBoatSquares(board, x, y);
+  squares.forEach(function(coords) {
+    drawSunken(false, coords[0], coords[1]);
+  });
+};
+
 var bombEnemy = function(hit, x, y) {
-  if (!hit) {
+  if (hit == "false") {
     enemyBoardElements[x][y] = ELEMENT_MISS;
     drawMiss(false, x, y);
-    setTurnOfPlayer(2);
-    enemyMove();
+    if (turnOfPlayer == 1) {
+      setTurnOfPlayer(2);
+      enemyMove();
+    }
   } else {
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawHitBoat(false, x, y);
-    hitSquare(enemyBoardElements, x, y);
+    if (hit == "sunken") {
+      sinkEnemyBoat(x, y);
+    }
   }
 };
 
