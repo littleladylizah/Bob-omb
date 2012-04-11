@@ -73,12 +73,15 @@ public class PostgresDB {
     }
 
     public static void saveGame(Game game) {
+        Player winner = game.isPlayer1Turn() ? game.getPlayer1() : game.getPlayer2();
+        Player loser = game.isPlayer1Turn() ? game.getPlayer2() : game.getPlayer1();
+
         PreparedStatement ps = null;
         try {
             ps = createConnection().prepareStatement(
                     "insert into game (winner, loser) values (?, ?)");
-            ps.setString(1, game.getPlayer1().getName());
-            ps.setString(2, game.getPlayer2().getName());
+            ps.setString(1, winner.getName());
+            ps.setString(2, loser.getName());
             ps.execute();
         } catch (Exception e) {
             e.printStackTrace();
