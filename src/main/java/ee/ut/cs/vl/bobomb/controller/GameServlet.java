@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import ee.ut.cs.vl.bobomb.db.PostgresDB;
 import ee.ut.cs.vl.bobomb.model.Game;
 import ee.ut.cs.vl.bobomb.model.Grid;
+import ee.ut.cs.vl.bobomb.model.Lobby;
 import ee.ut.cs.vl.bobomb.model.Player;
 import ee.ut.cs.vl.bobomb.util.Coordinates;
 import ee.ut.cs.vl.bobomb.util.Util;
@@ -21,6 +22,8 @@ import ee.ut.cs.vl.bobomb.util.Util;
 public class GameServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    private Lobby lobby = Lobby.getInstance();
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -128,7 +131,7 @@ public class GameServlet extends HttpServlet {
 
         if (finished) {
             PostgresDB.saveGame(game);
-            ((LobbyServlet) sess.getAttribute("lobbyServlet")).gameDone(game);
+            lobby.gameDone(game);
         }
         resp.getWriter().print(hit + (finished ? ";true" : ";null"));
     }
