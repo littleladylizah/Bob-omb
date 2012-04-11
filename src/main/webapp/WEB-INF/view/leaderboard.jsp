@@ -9,7 +9,7 @@
     <c:otherwise>
       <ol>
         <c:forEach var="player" items="${players}">
-          <li>${player.name}<span>${player.gamesWon}:${player.gamesLost}, ${player.winPercentage}</span></li>
+          <li>${player.name}<span>Võite: ${player.gamesWon} (${player.winPercentage}%), kaotuseid: ${player.gamesLost}</span></li>
         </c:forEach>
       </ol>
     </c:otherwise>
