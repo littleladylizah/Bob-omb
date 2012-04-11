@@ -18,7 +18,7 @@ public class Player {
     }
 
     public long getWinPercentage() {
-        return (100 * wins) / (100 * (wins + losses));
+        return (100 * wins) / (wins + losses);
     }
 
     public long getGamesWon() {
