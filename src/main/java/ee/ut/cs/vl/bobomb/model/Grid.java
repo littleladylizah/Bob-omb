@@ -42,7 +42,7 @@ public class Grid {
                 if (grid[i][y] == Square.BOAT) {
                     return "true";
                 }
-                if (grid[i][y] == Square.MISS) {
+                if (grid[i][y] == Square.MISSED) {
                     break;
                 }
             }
@@ -50,7 +50,7 @@ public class Grid {
                 if (grid[i][y] == Square.BOAT) {
                     return "true";
                 }
-                if (grid[i][y] == Square.MISS) {
+                if (grid[i][y] == Square.MISSED) {
                     break;
                 } 
             }
@@ -58,7 +58,7 @@ public class Grid {
                  if (grid[x][i] == Square.BOAT) {
                      return "true";
                  }
-                 if (grid[x][i] == Square.MISS) {
+                 if (grid[x][i] == Square.MISSED) {
                      break;
                  }
              }
@@ -66,7 +66,7 @@ public class Grid {
                  if (grid[x][i] == Square.BOAT) {
                      return "true";
                  }
-                 if (grid[x][i] == Square.MISS) {
+                 if (grid[x][i] == Square.MISSED) {
                      break;
                  } 
              }

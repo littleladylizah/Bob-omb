@@ -40,14 +40,14 @@ public class Game {
         }
     }
 
-    public boolean bomb(boolean player1, Coordinates coords) {
+    public String bomb(boolean player1, Coordinates coords) {
         lastMove = coords;
         Grid grid = player1 ? p1Grid : p2Grid;
-        boolean res = grid.bomb(coords.x, coords.y);
+        String res = grid.bomb(coords.x, coords.y);
         if (grid.allBoatsHit()) {
             state = State.FINISHED;
         }
-        if (!res) {
+        if ("false".equals(res)) {
             turn = !turn;
         }
         return res;
