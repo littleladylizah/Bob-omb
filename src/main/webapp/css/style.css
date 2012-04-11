@@ -77,14 +77,8 @@ div.clearfix {
   left: 30%;
   position:absolute;
   z-index: 100;
-  border-top-left-radius: 0.5em;
-  border-top-right-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
-  border-left: 10px solid #d8d8a8;
-  border-right: 10px solid #d8d8a8;
-  border-top: 10px solid #d8d8a8;
-  border-bottom: 10px solid #d8d8a8;
+  border-radius: 0.5em;
+  border: 10px solid #d8d8a8;
 }
 
 #fuzz {
