@@ -50,14 +50,14 @@ var countGames = function() {
 // Replaying a game
 // ------------------
 
-var replayMoves;
+var replayGame;
 var replayIndex;
 var replayID = -1;
 
-var replayGame = function(game) {
+var replay = function(game) {
   stopReplay();
   resetCanvases();
-  replayMoves = game;
+  replayGame = game;
   replayIndex = 0;
   startReplay();
 };
