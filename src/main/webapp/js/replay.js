@@ -75,8 +75,8 @@ var playPrev = function() {
   if (replayIndex <= 0) {
     return;
   }
-  // TODO
   replayIndex--;
+  // TODO
 };
 
 var startReplay = function() {
