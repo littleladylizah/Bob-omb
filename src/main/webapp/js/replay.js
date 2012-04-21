@@ -18,9 +18,9 @@ var storePut = function(key, value) {
   localStorage[key] = JSON.stringify(value);
 };
 
-// ------------------------------------------
+// ------------------------------
 // Storing and retrieving games
-// ------------------------------------------
+// ------------------------------
 
 var GAMES_KEY = "games";
 
