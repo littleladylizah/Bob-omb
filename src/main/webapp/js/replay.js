@@ -63,7 +63,7 @@ var replay = function(game) {
 };
 
 var playNext = function() {
-  if (replayIndex >= replayMoves.length) {
+  if (replayIndex >= replayGame.moves.length) {
     stopReplay();
     return;
   }
