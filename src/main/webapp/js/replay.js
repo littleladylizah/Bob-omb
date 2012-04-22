@@ -99,21 +99,21 @@ var stopReplay = function() {
 // Recording a game
 // ------------------
 
-var recordNew = function(enemy, initial) {
+var recordNew = function(player, enemy, initial) {
   var game = new Object();
-  game.name = new Date().toLocaleDateString() + " " + g_playerID + " vs " + enemy;
+  game.name = new Date().toLocaleDateString() + " " + player + " vs " + enemy;
   game.enemy = enemy;
   game.initial = initial;
   game.moves = [];
   return game;
 };
 
-var recordMove = function(game, player, x, y, value, sunk) {
+var recordMove = function(game, player, x, y, hit, sunk) {
   var move = new Object();
   move.player = player;
   move.x = x;
   move.y = y;
-  move.value = value;
+  move.hit = hit;
   move.sunk = sunk;
   game.moves.push(move);
 };

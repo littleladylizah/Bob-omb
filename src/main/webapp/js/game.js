@@ -29,6 +29,8 @@ var deleteMode = false;
 var positioning = false;
 
 var g_playerID;
+var g_enemyID;
+var recordingGame;
 
 var showResultFunction;
 
@@ -55,7 +57,8 @@ var resetGame = function() {
   resetCanvases();
 };
 
-var startPositioning = function() {
+var foundEnemy = function(enemy) {
+  g_enemyID = enemy;
   positioning = true;
 };
 
@@ -70,6 +73,7 @@ var startGame = function() {
 };
 
 var setGameStarted = function(beginner) {
+  recordingGame = recordNew(g_playerID, g_enemyID, playerBoardElements);
   gameStarted = true;
   setTurnOfPlayer(beginner);
   if (beginner == 2) {
@@ -78,6 +82,7 @@ var setGameStarted = function(beginner) {
 }
 
 var finishGame = function(won) {
+  storeGame(recordingGame);
   setTurnOfPlayer(0);
   showResultFunction(won);
 };
@@ -103,9 +108,9 @@ var createNewGame = function(callback) {
         action: "create",
         name: g_playerID
       },
-      success: function(data) {
-        startPositioning();
-        callback(data);
+      success: function(enemy) {
+        foundEnemy(enemy);
+        callback(enemy);
       }
   });
   callback("...");
@@ -119,9 +124,9 @@ var joinGame = function(opponent, callback) {
         name: g_playerID,
         opponent: opponent
       },
-      success: function(data) {
-        startPositioning();
-        callback(data);
+      success: function(enemy) {
+        foundEnemy(enemy);
+        callback(enemy);
       }
   });
 };
@@ -184,13 +189,17 @@ var bomb = function(x, y) {
 var hitPlayerSquare = function(x, y) {
   var board = playerBoardElements;
   var squares = getBoatSquares(board, x, y);
+  var sunk = false;
+
   if (squares.every(function(coords) {
         return board[coords[0]][coords[1]] == ELEMENT_HIT_BOAT;
       })) {
+    sunk = true;
     squares.forEach(function(coords) {
       drawSunken(true, coords[0], coords[1]);
     });
   }
+  recordMove(recordingGame, false, x, y, true, sunk);
 };
 
 var bombPlayer = function(x, y) {
@@ -208,6 +217,7 @@ var bombPlayer = function(x, y) {
     if (turnOfPlayer != 0) {
       setTurnOfPlayer(1);
     }
+    recordMove(recordingGame, false, x, y, false, false);
   }
 };
 
@@ -227,12 +237,16 @@ var bombEnemy = function(hit, x, y) {
       setTurnOfPlayer(2);
       enemyMove();
     }
+    recordMove(recordingGame, true, x, y, false, false);
   } else {
+    var sunk = false;
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawHitBoat(false, x, y);
     if (hit == "sunken") {
+      sunk = true;
       sinkEnemyBoat(x, y);
     }
+    recordMove(recordingGame, true, x, y, true, sunk);
   }
 };
 
