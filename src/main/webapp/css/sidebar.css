@@ -98,3 +98,7 @@
   color: #609000;
   outline: 1px solid #609000;
 }
+
+#sidebar-content .hidden {
+  display: none;
+}

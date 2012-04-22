@@ -2,7 +2,7 @@
 // Make sure we have Web Storage support
 // ---------------------------------------
 
-if typeof(localStorage) == "undefined" {
+if (typeof(localStorage) == "undefined") {
   alert("Puudub HTML5 Web Storage tugi!");
 };
 

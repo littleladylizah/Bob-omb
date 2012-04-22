@@ -283,10 +283,6 @@ var gridToString = function(grid) {
 // Boat positioning logic
 // ------------------------
 
-var clearBoatCountListeners = function() {
-  boatCountCallbacks = [];
-};
-
 var registerBoatCountListener = function(size, listener) {
   boatCountCallbacks.push([size, listener]);
 };

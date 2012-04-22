@@ -36,10 +36,31 @@
     <div id="sidebar">
       <div id="sidebar-toggle"></div>
       <div id="sidebar-container" class="sidebar-on">
-        <a id="sidebar-moves" class="left" href="#">Käigud</a>
         <a id="sidebar-games" class="right faded" href="#">Mängud</a>
         <div class="clearfix"></div>
-        <div id="sidebar-content"></div>
+        <div id="sidebar-content">
+          <div id="sidebar-boats">
+            <p id="boat4">
+              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat4-left">1</span>
+            </p>
+            <p id="boat3">
+              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat3-left">2</span>
+            </p>
+            <p id="boat2">
+              <img src="img/boat-left.png" /><img src="img/boat-right.png" /> x <span id="boat2-left">3</span>
+            </p>
+            <p id="boat1">
+              <img src="img/boat-single.png" /> x <span id="boat1-left">4</span>
+            </p>
+            <p id="delete-boats" class="button">Kustuta laev</p>
+            <p id="confirm-boats" class="button">Kinnita paigutus</p>
+          </div>
+          <div id="sidebar-replay" class="hidden">
+            <ul>
+              <li><a href="#">24.02.2012 Tiit vs Liis</a></li>
+            </ul>
+          </div>
+        </div>
         <a id="leaderboard-link" class="right" href="ajax/leaderboard" rel="#overlay">Edetabel</a>
       </div>
     </div>
