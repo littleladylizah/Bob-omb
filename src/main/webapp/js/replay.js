@@ -23,6 +23,11 @@ var storePut = function(key, value) {
 // ------------------------------
 
 var GAMES_KEY = "games";
+var storageCallbacks = [];
+
+var registerStorageCallback = function(handler) {
+  storageCallbacks.push(handler);
+};
 
 var getGames = function() {
   return storeGet(GAMES_KEY);
@@ -30,6 +35,9 @@ var getGames = function() {
 
 var setGames = function(games) {
   storePut(GAMES_KEY, games);
+  storageCallbacks.forEach(function(callback) {
+    callback();
+  });
 };
 
 var storeGame = function(game) {
