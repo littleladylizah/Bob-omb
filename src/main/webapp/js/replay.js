@@ -95,6 +95,29 @@ var stopReplay = function() {
   clearInterval(replayID);
 };
 
+// ------------------
+// Recording a game
+// ------------------
+
+var recordNew = function(enemy, initial) {
+  var game = new Object();
+  game.name = new Date().toLocaleDateString() + " " + g_playerID + " vs " + enemy;
+  game.enemy = enemy;
+  game.initial = initial;
+  game.moves = [];
+  return game;
+};
+
+var recordMove = function(game, player, x, y, value, sunk) {
+  var move = new Object();
+  move.player = player;
+  move.x = x;
+  move.y = y;
+  move.value = value;
+  move.sunk = sunk;
+  game.moves.push(move);
+};
+
 // ----------------------------------------
 // Make sure we have the GAMES_KEY object
 // ----------------------------------------
