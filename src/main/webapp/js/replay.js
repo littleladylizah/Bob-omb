@@ -65,6 +65,7 @@ var replayID = -1;
 var replay = function(game) {
   stopReplay();
   resetCanvases();
+  drawInitialGrid(game.initial);
   replayGame = game;
   replayIndex = 0;
   startReplay();
@@ -75,15 +76,20 @@ var playNext = function() {
     stopReplay();
     return;
   }
-  // TODO
-  replayIndex++;
+  var move = replayGame.moves[replayIndex++];
+    drawBoat(move.player, move.x, move.y, move.hit);
+  if (move.sunk) {
+    move.sunk.forEach(function(coords) {
+      drawSunken(move.player, coords[0], coords[1]);
+    });
+  }
 };
 
 var playPrev = function() {
   if (replayIndex <= 0) {
     return;
   }
-  replayIndex--;
+  var move = replayGame.moves[--replayIndex];
   // TODO
 };
 

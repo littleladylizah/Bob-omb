@@ -64,4 +64,3 @@ var doForDiagonals = function(x, y, fn) {
     fn(coords[0], coords[1]);
   });
 };
-

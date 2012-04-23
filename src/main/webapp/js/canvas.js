@@ -247,8 +247,18 @@ var drawMiss = function(player, x, y) {
   drawImage(miss, player, x, y);
 };
 
-var drawSunken= function(player, x, y) {
+var drawSunken = function(player, x, y) {
   drawImage(sunken, player, x, y);
+};
+
+var drawInitialGrid = function(grid) {
+  grid.forEach(function(col, x) {
+    col.forEach(function(square, y) {
+      if (square != null) {
+        drawBoat(true, x, y);
+      }
+    });
+  });
 };
 
 // ---------------------------

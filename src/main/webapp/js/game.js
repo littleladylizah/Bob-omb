@@ -199,7 +199,7 @@ var hitPlayerSquare = function(x, y) {
       drawSunken(true, coords[0], coords[1]);
     });
   }
-  recordMove(recordingGame, false, x, y, true, sunk);
+  recordMove(recordingGame, false, x, y, true, sunk ? squares : null);
 };
 
 var bombPlayer = function(x, y) {
@@ -217,7 +217,7 @@ var bombPlayer = function(x, y) {
     if (turnOfPlayer != 0) {
       setTurnOfPlayer(1);
     }
-    recordMove(recordingGame, false, x, y, false, false);
+    recordMove(recordingGame, false, x, y, false, null);
   }
 };
 
@@ -227,6 +227,7 @@ var sinkEnemyBoat = function(x, y) {
   squares.forEach(function(coords) {
     drawSunken(false, coords[0], coords[1]);
   });
+  return squares;
 };
 
 var bombEnemy = function(hit, x, y) {
@@ -237,16 +238,16 @@ var bombEnemy = function(hit, x, y) {
       setTurnOfPlayer(2);
       enemyMove();
     }
-    recordMove(recordingGame, true, x, y, false, false);
+    recordMove(recordingGame, true, x, y, false, null);
   } else {
     var sunk = false;
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
     drawHitBoat(false, x, y);
     if (hit == "sunken") {
       sunk = true;
-      sinkEnemyBoat(x, y);
+      var squares = sinkEnemyBoat(x, y);
     }
-    recordMove(recordingGame, true, x, y, true, sunk);
+    recordMove(recordingGame, true, x, y, true, sunk ? squares : null);
   }
 };
 
