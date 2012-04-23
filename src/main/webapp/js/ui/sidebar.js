@@ -24,7 +24,7 @@ var showBoats = function() {
 var refreshGameHistory = function() {
   var games = [];
   getGames().forEach(function(game) {
-    games.push("<li>" + game.id + "</li>");
+    games.push("<li>" + game.name + "</li>");
   });
   $("#sidebar-replay ul").html(games.join(''));
 };
