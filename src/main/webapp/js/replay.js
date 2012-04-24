@@ -78,11 +78,16 @@ var playNext = function() {
   }
   var move = replayGame.moves[replayIndex++];
   if (move.hit) {
+    if (!(move.sunk)) {
+      audioHit.play();
+    }
     drawHitBoat(move.player, move.x, move.y);
   } else {
+    audioMiss.play();
     drawMiss(move.player, move.x, move.y);
   }
   if (move.sunk) {
+    audioBoom.play();
     move.sunk.forEach(function(coords) {
       drawSunken(move.player, coords[0], coords[1]);
     });

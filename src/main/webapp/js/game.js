@@ -204,6 +204,10 @@ var hitPlayerSquare = function(x, y) {
     squares.forEach(function(coords) {
       drawSunken(true, coords[0], coords[1]);
     });
+    audioBoom.play();
+  }
+  else {
+    audioHit.play();
   }
   recordMove(recordingGame, true, x, y, true, sunk ? squares : null);
 };
@@ -223,6 +227,7 @@ var bombPlayer = function(x, y) {
     if (turnOfPlayer != 0) {
       setTurnOfPlayer(1);
     }
+    audioMiss.play();
     recordMove(recordingGame, true, x, y, false, null);
   }
   if (turnOfPlayer == 0) {
@@ -532,7 +537,6 @@ var handlePlayerCanvasClick = function(x, y) {
   if (!positioning) {
     return;
   }
-  audioMiss.play();
   if (deleteMode) {
     deleteBoat(x, y);
   } else {
