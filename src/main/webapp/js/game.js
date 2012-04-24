@@ -84,6 +84,12 @@ var setGameStarted = function(beginner) {
 var finishGame = function(won) {
   storeGame(recordingGame);
   setTurnOfPlayer(0);
+  if (won) {
+    audioWin.play();
+  }
+  else {
+    audioLoss.play();
+  }
   showResultFunction(won);
 };
 
@@ -238,6 +244,7 @@ var bombEnemy = function(hit, x, y) {
       setTurnOfPlayer(2);
       enemyMove();
     }
+    audioMiss.play()
     recordMove(recordingGame, true, x, y, false, null);
   } else {
     var sunk = false;
@@ -246,6 +253,10 @@ var bombEnemy = function(hit, x, y) {
     if (hit == "sunken") {
       sunk = true;
       var squares = sinkEnemyBoat(x, y);
+      audioBoom.play();
+    }
+    else {
+      audioHit.play();
     }
     recordMove(recordingGame, true, x, y, true, sunk ? squares : null);
   }
@@ -514,7 +525,7 @@ var handlePlayerCanvasClick = function(x, y) {
   if (!positioning) {
     return;
   }
-
+  audioMiss.play();
   if (deleteMode) {
     deleteBoat(x, y);
   } else {
