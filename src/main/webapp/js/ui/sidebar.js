@@ -27,6 +27,10 @@ var refreshGameHistory = function() {
     games.push("<li>" + game.name + "</li>");
   });
   $("#sidebar-replay ul").html(games.join(''));
+  var li = $("#sidebar-replay ul li");
+  li.click(function() {
+    replay(getGame(li.index(this)));
+  });
 };
 
 $(window).load(function() {
@@ -70,13 +74,22 @@ $(window).load(function() {
 
   // Attach listener to toggler
   toggler.click(function() {
-    if (!gameStarted) {
-      container.toggleClass("sidebar-on sidebar-off");
-    }
+    container.toggleClass("sidebar-on sidebar-off");
   });
 
   // Attach listeners to links
   gamesLink.click(showReplay);
+  $("#replay-prev").click(function() {
+    stopReplay();
+    playPrev();
+  });
+  $("#replay-play").click(function() {
+    startReplay();
+  });
+  $("#replay-next").click(function() {
+    stopReplay();
+    playNext();
+  });
 
   // Default to showing boats on open
   showBoats();

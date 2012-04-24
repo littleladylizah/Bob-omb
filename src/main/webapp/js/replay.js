@@ -72,12 +72,16 @@ var replay = function(game) {
 };
 
 var playNext = function() {
-  if (replayIndex >= replayGame.moves.length) {
+  if (replayGame == null || replayIndex >= replayGame.moves.length) {
     stopReplay();
     return;
   }
   var move = replayGame.moves[replayIndex++];
-    drawBoat(move.player, move.x, move.y, move.hit);
+  if (move.hit) {
+    drawHitBoat(move.player, move.x, move.y);
+  } else {
+    drawMiss(move.player, move.x, move.y);
+  }
   if (move.sunk) {
     move.sunk.forEach(function(coords) {
       drawSunken(move.player, coords[0], coords[1]);
@@ -86,37 +90,60 @@ var playNext = function() {
 };
 
 var playPrev = function() {
-  if (replayIndex <= 0) {
+  if (replayGame == null || replayIndex <= 0) {
     return;
   }
   var move = replayGame.moves[--replayIndex];
-  // TODO
+  drawEmpty(move.player, move.x, move.y);
+  if (move.hit) {
+    if (move.player) {
+      drawBoat(true, move.x, move.y, false, true);
+    } else {
+      doForSides(move.x, move.y, function(x, y) {
+        if (hasDrawn(false, x, y)) {
+          drawEmpty(false, x, y);
+          drawHitBoat(false, x, y);
+        }
+      });
+    }
+    if (move.sunk) {
+      move.sunk.forEach(function(coords) {
+        if (coords[0] != move.x || coords[1] != move.y) {
+          drawEmpty(move.player, coords[0], coords[1]);
+          drawHitBoat(move.player, coords[0], coords[1]);
+        }
+      });
+    }
+  }
 };
 
 var startReplay = function() {
-  replayID = setInterval(playNext, 1000);
+  if (replayGame != null && replayID == -1) {
+    replayID = setInterval(playNext, 1000);
+  }
 };
 
 var stopReplay = function() {
   clearInterval(replayID);
+  replayID = -1;
 };
 
 // ------------------
 // Recording a game
 // ------------------
 
-var recordNew = function(player, enemy, initial) {
+var recordNew = function(player, enemy, board) {
   var game = new Object();
   game.name = new Date().toLocaleDateString() + " " + player + " vs " + enemy;
   game.enemy = enemy;
-  game.initial = initial;
+  game.initial = $.extend(true, [], board); // deep copy
   game.moves = [];
   return game;
 };
 
 var recordMove = function(game, player, x, y, hit, sunk) {
   var move = new Object();
-  move.player = player;
+  move.player = player; // this shows whose board the move is on, not who made it
   move.x = x;
   move.y = y;
   move.hit = hit;

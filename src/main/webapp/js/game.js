@@ -82,7 +82,7 @@ var setGameStarted = function(beginner) {
 }
 
 var finishGame = function(won) {
-  storeGame(recordingGame);
+  gameStarted = false;
   setTurnOfPlayer(0);
   if (won) {
     audioWin.play();
@@ -205,7 +205,7 @@ var hitPlayerSquare = function(x, y) {
       drawSunken(true, coords[0], coords[1]);
     });
   }
-  recordMove(recordingGame, false, x, y, true, sunk ? squares : null);
+  recordMove(recordingGame, true, x, y, true, sunk ? squares : null);
 };
 
 var bombPlayer = function(x, y) {
@@ -223,7 +223,10 @@ var bombPlayer = function(x, y) {
     if (turnOfPlayer != 0) {
       setTurnOfPlayer(1);
     }
-    recordMove(recordingGame, false, x, y, false, null);
+    recordMove(recordingGame, true, x, y, false, null);
+  }
+  if (turnOfPlayer == 0) {
+    storeGame(recordingGame);
   }
 };
 
@@ -246,6 +249,7 @@ var bombEnemy = function(hit, x, y) {
     }
     audioMiss.play()
     recordMove(recordingGame, true, x, y, false, null);
+    recordMove(recordingGame, false, x, y, false, null);
   } else {
     var sunk = false;
     enemyBoardElements[x][y] = ELEMENT_HIT_BOAT;
@@ -258,7 +262,10 @@ var bombEnemy = function(hit, x, y) {
     else {
       audioHit.play();
     }
-    recordMove(recordingGame, true, x, y, true, sunk ? squares : null);
+    recordMove(recordingGame, false, x, y, true, sunk ? squares : null);
+  }
+  if (turnOfPlayer == 0) {
+    storeGame(recordingGame);
   }
 };
 
