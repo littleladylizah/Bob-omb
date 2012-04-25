@@ -11,7 +11,8 @@ if (typeof(localStorage) == "undefined") {
 // ------------------------------
 
 var storeGet = function(key) {
-  return JSON.parse(localStorage[key]);
+  var stored = localStorage[key];
+  return stored != null ? JSON.parse(stored) : null;
 };
 
 var storePut = function(key, value) {
