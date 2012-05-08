@@ -1,7 +1,7 @@
 <%@page pageEncoding="utf-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="et" xml:lang="et">
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     <script type="text/javascript" src="js/jquery.tools.min.js"></script>
