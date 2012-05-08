@@ -50,7 +50,8 @@ public class LobbyServlet extends HttpServlet {
 
     private void createGame(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        String name = req.getParameter(LoginServlet.ATTR_PLAYER);
+        String name = (String) req.getSession().getAttribute(
+                LoginServlet.ATTR_PLAYER);
         Player player = new Player(name);
         Game game = new Game(player);
         req.getSession().setAttribute("player1", true);
@@ -72,7 +73,8 @@ public class LobbyServlet extends HttpServlet {
 
     private void joinGame(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
-        String name = req.getParameter(LoginServlet.ATTR_PLAYER);
+        String name = (String) req.getSession().getAttribute(
+                LoginServlet.ATTR_PLAYER);
         String opponent = req.getParameter("opponent");
         Game game = lobby.getOpenGame(opponent);
 

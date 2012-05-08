@@ -251,7 +251,6 @@ var bombEnemy = function(hit, x, y) {
       enemyMove();
     }
     audioMiss.play()
-    recordMove(recordingGame, true, x, y, false, null);
     recordMove(recordingGame, false, x, y, false, null);
   } else {
     var sunk = false;
