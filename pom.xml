@@ -4,7 +4,7 @@
   <groupId>ee.ut.cs.vl.bobomb</groupId>
   <artifactId>bobomb</artifactId>
   <packaging>war</packaging>
-  <version>v5-snapshot</version>
+  <version>v5</version>
   <name>Bob-omb</name>
   <url>http://bobomb.jelastic.dogado.eu/</url>
   <dependencies>
