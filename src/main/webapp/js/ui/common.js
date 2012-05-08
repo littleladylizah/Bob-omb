@@ -3,7 +3,7 @@
 // ---------------------
 
 $(window).load(function() {
-  $("#player-title").text(g_playerID);
+  g_playerID = $("#player-title").text();
   setShowResultFunction(showResult);
   registerTurnChangeListener(function(turn) {
     if (turn == 1) {

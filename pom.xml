@@ -4,7 +4,7 @@
   <groupId>ee.ut.cs.vl.bobomb</groupId>
   <artifactId>bobomb</artifactId>
   <packaging>war</packaging>
-  <version>v4-snapshot</version>
+  <version>v5-snapshot</version>
   <name>Bob-omb</name>
   <url>http://bobomb.jelastic.dogado.eu/</url>
   <dependencies>
@@ -22,6 +22,11 @@
       <groupId>postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>9.1-901.jdbc4</version>
+    </dependency>
+    <dependency>
+        <groupId>org.expressme</groupId>
+        <artifactId>JOpenId</artifactId>
+        <version>1.08</version>
     </dependency>
   </dependencies>
   <build>
