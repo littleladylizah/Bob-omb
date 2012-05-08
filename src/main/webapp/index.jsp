@@ -51,16 +51,16 @@
         <div id="sidebar-content">
           <div id="sidebar-boats">
             <p id="boat4">
-              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat4-left">1</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat4-left">1</span>
             </p>
             <p id="boat3">
-              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat3-left">2</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat3-left">2</span>
             </p>
             <p id="boat2">
-              <img src="img/boat-left.png" /><img src="img/boat-right.png" /> x <span id="boat2-left">3</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat2-left">3</span>
             </p>
             <p id="boat1">
-              <img src="img/boat-single.png" /> x <span id="boat1-left">4</span>
+              <img src="img/boat-single.png" alt="boat single"/> x <span id="boat1-left">4</span>
             </p>
             <p id="delete-boats" class="button">Kustuta laev</p>
             <p id="confirm-boats" class="button">Kinnita paigutus</p>
