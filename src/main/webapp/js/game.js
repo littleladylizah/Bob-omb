@@ -112,7 +112,6 @@ var createNewGame = function(callback) {
       type: "POST",
       data: {
         action: "create",
-        name: g_playerID
       },
       success: function(enemy) {
         foundEnemy(enemy);
@@ -127,7 +126,6 @@ var joinGame = function(opponent, callback) {
       type: "POST",
       data: {
         action: "join",
-        name: g_playerID,
         opponent: opponent
       },
       success: function(enemy) {
@@ -579,9 +577,6 @@ var handleCanvasClick = function(player, e) {
 
 $(window).load(function() {
   resetGame();
-  while (g_playerID == undefined || g_playerID.trim().length == 0) {
-    g_playerID = prompt("Palun sisesta oma nimi:", "Default");
-  }
   gPlayerCanvas.click(function(e) {
     handleCanvasClick(true, e);
   });
