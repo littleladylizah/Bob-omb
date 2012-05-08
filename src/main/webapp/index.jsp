@@ -4,6 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="et" xml:lang="et">
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/sidebar.css"/>
+    <link rel="stylesheet" type="text/css" href="css/overlay.css"/>
     <script type="text/javascript" src="js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="js/util.js"></script>
     <script type="text/javascript" src="js/canvas.js"></script>
@@ -13,17 +16,14 @@
     <script type="text/javascript" src="js/ui/common.js"></script>
     <script type="text/javascript" src="js/ui/sidebar.js"></script>
     <script type="text/javascript" src="js/ui/overlay.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="css/sidebar.css"/>
-    <link rel="stylesheet" type="text/css" href="css/overlay.css"/>
     <title>Bob-omb Battleships</title>
     
     
-    	<audio id="audio-boom" src="audio/boom.wav" type="audio/wav" preload="auto"></audio>
-    	<audio id="audio-hit" src="audio/hit.wav" type="audio/wav" preload="auto"></audio>
-    	<audio id="audio-loss" src="audio/loss.wav" type="audio/wav" preload="auto"></audio>
-    	<audio id="audio-miss" src="audio/miss.wav" type="audio/wav" preload="auto"></audio>
-    	<audio id="audio-win" src="audio/win.wav" type="audio/wav" preload="auto"></audio>
+  	<audio id="audio-boom" src="audio/boom.wav" type="audio/wav" preload="auto"></audio>
+  	<audio id="audio-hit" src="audio/hit.wav" type="audio/wav" preload="auto"></audio>
+  	<audio id="audio-loss" src="audio/loss.wav" type="audio/wav" preload="auto"></audio>
+  	<audio id="audio-miss" src="audio/miss.wav" type="audio/wav" preload="auto"></audio>
+  	<audio id="audio-win" src="audio/win.wav" type="audio/wav" preload="auto"></audio>
     
   </head>
   <body>
@@ -51,25 +51,25 @@
         <div id="sidebar-content">
           <div id="sidebar-boats">
             <p id="boat4">
-              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat4-left">1</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat4-left">1</span>
             </p>
             <p id="boat3">
-              <img src="img/boat-left.png" /><img src="img/boat-middle-horizontal.png" /><img src="img/boat-right.png" /> x <span id="boat3-left">2</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-middle-horizontal.png" alt="boat middle horizontal"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat3-left">2</span>
             </p>
             <p id="boat2">
-              <img src="img/boat-left.png" /><img src="img/boat-right.png" /> x <span id="boat2-left">3</span>
+              <img src="img/boat-left.png" alt="boat left"/><img src="img/boat-right.png" alt="boat right"/> x <span id="boat2-left">3</span>
             </p>
             <p id="boat1">
-              <img src="img/boat-single.png" /> x <span id="boat1-left">4</span>
+              <img src="img/boat-single.png" alt="boat single"/> x <span id="boat1-left">4</span>
             </p>
             <p id="delete-boats" class="button">Kustuta laev</p>
             <p id="confirm-boats" class="button">Kinnita paigutus</p>
           </div>
           <div id="sidebar-replay" class="hidden">
             <div id="replay-buttons">
-              <img id="replay-prev" src="img/prev.png" />
-              <img id="replay-play" src="img/play.png" />
-              <img id="replay-next" src="img/next.png" />
+              <img id="replay-prev" src="img/prev.png" alt="previous"/>
+              <img id="replay-play" src="img/play.png" alt="play"/>
+              <img id="replay-next" src="img/next.png" alt="next"/>
             </div>
             <ul></ul> <!-- dynamically filled -->
           </div>
